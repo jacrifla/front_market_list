@@ -1,3 +1,5 @@
+import { API_BASE_URL } from './api';
+
 export async function fetchWrapper(endpoint, method = 'GET', body = null, headers = {}) {
     const config = {
         method,
@@ -12,7 +14,7 @@ export async function fetchWrapper(endpoint, method = 'GET', body = null, header
     }
 
     try {
-        const response = await fetch(`${URL}${endpoint}`, config);
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
         const responseData = await response.json();
 
         if (!response.ok || !responseData.status) {
