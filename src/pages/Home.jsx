@@ -6,7 +6,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import ItemCard from '../components/ItemCard';
 import SelectedItemDetails from '../components/SelectedItemDetail';
 import useHomeLogic from '../hooks/useHomeLogic';
-import ListNameModal from '../components/ListNameModal';
+import AddEditListModal from '../components/AddEditListModal';
 import ShareListModal from '../components/ShareListModal';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -115,7 +115,7 @@ export default function Home() {
         )}
       </main>
 
-      <ListNameModal
+      <AddEditListModal
         show={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleModalConfirm}
