@@ -7,8 +7,12 @@
   --bs-hover-primary: #0056b3;
 }
 
-body {
+body,
+#root,
+html {
   background-color: var(--bs-bg);
+  padding: 0 !important;
+  margin: 0 !important;
   font-family: 'Segoe UI', sans-serif;
 }
 
@@ -37,7 +41,7 @@ body {
 }
 
 .sidebar-width {
-    width: 15em;
+  width: 15em;
 }
 
 .offcanvas-backdrop {
@@ -85,6 +89,11 @@ body {
   background-color: var(--bs-hover-primary);
 }
 
+.card-perfil {
+  max-width: 400px;
+  width: 100%;
+}
+
 @media (max-width: 576px) {
   .card-login {
     height: 100vh;
@@ -92,5 +101,13 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+  }
+
+  .card-perfil {
+    width: 100vw;
+    height: 100vh;
+    margin: 0 !important;
+    border-radius: 0;
+    box-shadow: none;
   }
 }
