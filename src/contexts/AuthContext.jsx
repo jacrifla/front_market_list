@@ -56,6 +56,21 @@ export const AuthProvider = ({ children }) => {
     return userService.restoreUser(email);
   };
 
+  const updateUser = async (userData) => {
+    if (!user || !user.userId) throw new Error("Usuário não autenticado");
+
+    try {
+      const updateUser = await userService.updateUser(user.userId, userData);
+      setUser(updateUser);
+      localStorage.setItem('user', JSON.stringify(updateUser));
+
+      return updateUser;
+    } catch (error) {
+      console.error('Erro ao atualizar usuário: ', error);
+      throw error;      
+    }    
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -67,6 +82,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         register,
         restoreUser,
+        updateUser,
       }}
     >
       {children}
