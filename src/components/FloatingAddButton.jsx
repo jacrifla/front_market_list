@@ -1,4 +1,4 @@
-export default function FloatingAddButton({ onClick, icon = 'bi-plus' }) {
+export default function FloatingAddButton({ onClick, icon = 'plus' }) {
   return (
     <button
       onClick={onClick}
