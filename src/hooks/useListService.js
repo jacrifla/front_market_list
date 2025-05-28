@@ -34,12 +34,12 @@ const useListService = (userId) => {
         }
     };
 
-    const updateList = async (listId) => {
+    const updateList = async (listId, {listName}) => {
         setLoading(true);
         setError(null);
 
         try {
-            await listService.updateList(listId);
+            await listService.updateList(listId, {listName});
             await fetchLists();
         } catch (error) {
             setError(`Erro ao atualizar a lista. ${error}`);
