@@ -3,15 +3,15 @@ import { fetchWrapper } from "../utils/fetchWrapper";
 const endpointBase = '/list'
 
 const listService = {
-    fetchListsByUserId: (userId) => fetchWrapper(`${endpointBase}/${userId}`),
+    fetchListsByUserId: async (userId) => await fetchWrapper(`${endpointBase}/${userId}`),
 
-    createList: (userId, listName) => fetchWrapper(`${endpointBase}`, 'POST', { userId, listName }),
+    createList: async (userId, listName) => await fetchWrapper(`${endpointBase}`, 'POST', { userId, listName }),
 
-    updateList: (listId, listName) => fetchWrapper(`${endpointBase}/${listId}`, 'PUT', { listName }),
+    updateList: async (listId, {listName}) =>  await fetchWrapper(`${endpointBase}/${listId}`, 'PUT', { listName }),
 
-    deleteList: (listId) => fetchWrapper(`${endpointBase}/${listId}`, 'DELETE'),
+    deleteList: async (listId) => await fetchWrapper(`${endpointBase}/${listId}`, 'DELETE'),
 
-    markListCompleted: (listId, totalAmout) => fetchWrapper(`${endpointBase}/mark/${listId}`, 'PATCH', { totalAmout }),
+    markListCompleted: async (listId, totalAmout) => await fetchWrapper(`${endpointBase}/mark/${listId}`, 'PATCH', { totalAmout }),
 }
 
 export default listService;
