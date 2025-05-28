@@ -17,7 +17,7 @@ export default function MainLayout() {
 
   return (
     <>
-      <Navbar bg="primary" variant="dark" expand="lg" className="mb-4 shadow">
+      <Navbar bg="primary" variant="dark" expand="lg" className="shadow">
         <Container>
           <Navbar.Brand href="/" className="fw-bold">
             <i className="bi bi-cart4 me-2"></i> Lista da Mamãe
@@ -64,9 +64,9 @@ export default function MainLayout() {
         </Container>
       </Navbar>
 
-      <Container>
+      <div>
         <Outlet />
-      </Container>
+      </div>
 
       <ConfirmModal
         show={showConfirm}
