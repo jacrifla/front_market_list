@@ -15,6 +15,12 @@ const useHomeLogic = () => {
 
     const [total, setTotal] = useState(0);
     const [selectedListId, setSelectedListId] = useState(null);
+    const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
+
+    const [purchaseDateByListId, setPurchaseDateByListId] = useState({});
+    const [isPurchaseDateModalOpen, setIsPurchaseDateModalOpen] = useState(false);
+    const [pendingMarkAsBought, setPendingMarkAsBought] = useState(null);
+
 
     const [selectedItem, setSelectedItem] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -40,7 +46,7 @@ const useHomeLogic = () => {
         itemType: 'common',
     });
 
-    const { lists, createList, updateList, deleteList, success } = useListService(userId);
+    const { lists, createList, updateList, deleteList, markListCompleted, success } = useListService(userId);
     const { generateShareToken } = useShareTokenService();
     const {
         searchItemByBarcodeOrName,
@@ -185,6 +191,30 @@ const useHomeLogic = () => {
         }
     };
 
+    const handleCompleteList = async (listId) => {
+        await markListCompleted({
+            listId,
+            userId,
+            totalAmount: total,
+            purchaseDate: purchaseDateByListId[listId] || null
+        });
+        setSelectedListId(listId);
+        setIsConfirmDeleteModalOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (selectedListId) {
+            await handleDeleteList(selectedListId);
+            setSelectedListId(null);
+            setIsConfirmDeleteModalOpen(false);
+        }
+    };
+
+    const handleCancelDelete = () => {
+        setSelectedListId(null);
+        setIsConfirmDeleteModalOpen(false);
+    };
+
     //   Item
     const openAddItemModal = () => {
         setItemModalMode('add');
@@ -242,6 +272,32 @@ const useHomeLogic = () => {
         await fetchItemsByListId(selectedListId);
     };
 
+    const handleCheckItem = (item) => {
+        const listDate = purchaseDateByListId[item.listId];
+
+        if (!listDate) {
+            setPendingMarkAsBought(item);
+            setIsPurchaseDateModalOpen(true);
+            return;
+        }
+
+        handleMarkAsBoughtClick(item);
+    };
+
+    const handlePurchaseDateSelected = (date) => {
+        if (!pendingMarkAsBought) return;
+
+        setPurchaseDateByListId(prev => ({
+            ...prev,
+            [pendingMarkAsBought.listId]: date
+        }));
+
+        handleMarkAsBoughtClick(pendingMarkAsBought);
+
+        setPendingMarkAsBought(null);
+        setIsPurchaseDateModalOpen(false);
+    };
+
     const handleMarkAsBoughtClick = useCallback((item) => {
         setSelectedItem(item);
         setIsConfirmSaveModalOpen(true);
@@ -266,6 +322,7 @@ const useHomeLogic = () => {
             unitId: null,
             marketId: null,
             barcode: null,
+            purchaseDate: purchaseDateByListId[selectedItem.listId]
         });
 
         handleCancel();
@@ -289,6 +346,7 @@ const useHomeLogic = () => {
             unitId: data.unitId,
             marketId: data.marketId,
             barcode: data.barcode,
+            purchaseDate: purchaseDateByListId[selectedItem.listId]
         });
 
         handleCancel();
@@ -315,7 +373,6 @@ const useHomeLogic = () => {
         handleAddList,
         handleEditList,
         handleDeleteList,
-        // handleClickMarkAsBought,
         handleDeleteItem,
         setIsSidebarOpen,
         setSelectedItem,
@@ -343,7 +400,6 @@ const useHomeLogic = () => {
         handleItemNameChange,
         handleSelectSuggestion,
 
-        handleMarkAsBoughtClick,
         isConfirmSaveModalOpen,
         isSaveItemModalOpen,
         handleCancel,
@@ -359,6 +415,17 @@ const useHomeLogic = () => {
         loadingUnits,
         markets,
         loadingMarkets,
+
+        isPurchaseDateModalOpen,
+        handleCheckItem,
+        handlePurchaseDateSelected,
+        setIsPurchaseDateModalOpen,
+        setPendingMarkAsBought,
+
+        handleCompleteList,
+        isConfirmDeleteModalOpen,
+        handleConfirmDelete,
+        handleCancelDelete,
     };
 };
 
