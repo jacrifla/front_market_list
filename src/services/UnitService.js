@@ -3,13 +3,13 @@ import { fetchWrapper } from "../utils/fetchWrapper";
 const endpointBase = '/unit';
 
 const unitService = {
-    createUnit: (unitName) => fetchWrapper(`${endpointBase}`, 'POST', { unitName }),
+    createUnit: async (unitName) => await fetchWrapper(`${endpointBase}`, 'POST', { unitName }),
 
-    updateUnit: (unitId, unitName) => fetchWrapper(`${endpointBase}/${unitId}`, 'PUT', { unitName }),
+    updateUnit: async (unitId, unitName) => await fetchWrapper(`${endpointBase}/${unitId}`, 'PUT', { unitName }),
 
-    deleteUnit: (unitId) => fetchWrapper(`${endpointBase}/${unitId}`, 'DELETE'),
+    deleteUnit: async (unitId) => await fetchWrapper(`${endpointBase}/${unitId}`, 'DELETE'),
 
-    getAllUnits: () => fetchWrapper(`${endpointBase}`),
+    getAllUnits: async () => await fetchWrapper(`${endpointBase}`),
 };
 
 export default unitService;

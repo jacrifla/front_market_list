@@ -1,21 +1,21 @@
 import userService from '../services/UserService';
 
 const useUserService = () => {
-    const getByEmail = (email) => userService.getByEmail(email);
+    const getByEmail = async (email) => await userService.getByEmail(email);
 
-    const getById = (userId) => userService.getById(userId);
+    const getById = async (userId) => await userService.getById(userId);
 
-    const createUser = (userData) => userService.createUser(userData);
+    const createUser = async (userData) => await userService.createUser(userData);
 
-    const updateUser = (userId, userData) => userService.updateUser(userId, userData);
+    const updateUser = async (userId, userData) => await userService.updateUser(userId, userData);
 
-    const restoreUser = (email) => userService.restoreUser(email);
+    const restoreUser = async (email) => await userService.restoreUser(email);
 
-    const resetPassword = (userData) => userService.resetPassword(userData);
+    const resetPassword = async (userData) => await userService.resetPassword(userData);
 
-    const login = (userData) => userService.login(userData);
+    const login = async (userData) => await userService.login(userData);
 
-    const deleteUser = (userId) => userService.deleteUser(userId);
+    const deleteUser = async (userId) => await userService.deleteUser(userId);
 
     return {
         getByEmail,

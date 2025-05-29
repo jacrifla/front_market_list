@@ -3,13 +3,13 @@ import { fetchWrapper } from "../utils/fetchWrapper";
 const endpointBase = '/brand';
 
 const brandService = {
-    createBrand: (brandName) => fetchWrapper(`${endpointBase}`, 'POST', { brandName }),
+    createBrand: async (brandName) => fetchWrapper(`${endpointBase}`, 'POST', { brandName }),
 
-    updateBrand: (brandId, brandName) => fetchWrapper(`${endpointBase}/${brandId}`, 'PUT', { brandName }),
+    updateBrand: async (brandId, brandName) => fetchWrapper(`${endpointBase}/${brandId}`, 'PUT', { brandName }),
 
-    deleteBrand: (brandId) => fetchWrapper(`${endpointBase}/${brandId}`, 'DELETE'),
+    deleteBrand: async (brandId) => fetchWrapper(`${endpointBase}/${brandId}`, 'DELETE'),
 
-    getAllBrands: () => fetchWrapper(`${endpointBase}/all`),
+    getAllBrands: async () => fetchWrapper(`${endpointBase}/all`),
 };
 
 export default brandService;

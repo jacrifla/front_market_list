@@ -1,17 +1,17 @@
 import { fetchWrapper } from "../utils/fetchWrapper";
 
-const endpointBase = '/list-item'
+const endpointBase = '/list-item';
 
 const listItemService = {
-    createItem: (itemData) => fetchWrapper(`${endpointBase}`, 'POST', itemData),
+    createItem: async (itemData) => fetchWrapper(`${endpointBase}`, 'POST', itemData),
 
-    updateItem: (itemListId, itemData) => fetchWrapper(`${endpointBase}/${itemListId}`, 'PUT', itemData),
+    updateItem: async (itemListId, itemData) => fetchWrapper(`${endpointBase}/${itemListId}`, 'PUT', itemData),
 
-    getItemsByListId: (listId) => fetchWrapper(`${endpointBase}/${listId}`),
+    getItemsByListId: async (listId) => fetchWrapper(`${endpointBase}/${listId}`),
 
-    deleteItem: (itemListId) => fetchWrapper(`${endpointBase}/${itemListId}`, 'DELETE'),
+    deleteItem: async (itemListId) => fetchWrapper(`${endpointBase}/${itemListId}`, 'DELETE'),
 
-    markItemAsBought: (purchaseData) => fetchWrapper(`${endpointBase}/purchase`, 'POST', purchaseData),
-}
+    markItemAsBought: async (purchaseData) => fetchWrapper(`${endpointBase}/purchase`, 'POST', purchaseData),
+};
 
 export default listItemService;

@@ -1,12 +1,12 @@
 import shareTokenService from '../services/shareTokenService';
 
 const useShareTokenService = () => {
-    const generateShareToken = (listId) => {
-        return shareTokenService.generateShareToken(listId);
+    const generateShareToken = async (listId) => {
+        return await shareTokenService.generateShareToken(listId);
     };
 
-    const acceptShareToken = (tokenData) => {
-        return shareTokenService.acceptShareToken(tokenData);
+    const acceptShareToken = async (tokenData) => {
+        return await shareTokenService.acceptShareToken(tokenData);
     };
 
     return {

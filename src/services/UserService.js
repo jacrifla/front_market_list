@@ -3,21 +3,21 @@ import { fetchWrapper } from "../utils/fetchWrapper";
 const endpointBase = '/user';
 
 const userService = {
-    getByEmail: (email) => fetchWrapper(`${endpointBase}/by-email`, 'POST', { email }),
+    getByEmail: async (email) => await fetchWrapper(`${endpointBase}/by-email`, 'POST', { email }),
     
-    getById: (userId) => fetchWrapper(`${endpointBase}/${userId}`),
+    getById: async (userId) => await fetchWrapper(`${endpointBase}/${userId}`),
 
-    createUser: (userData) => fetchWrapper(`${endpointBase}/create`, 'POST', userData),
+    createUser: async (userData) => await fetchWrapper(`${endpointBase}/create`, 'POST', userData),
 
-    updateUser: (userId, userData) => fetchWrapper(`${endpointBase}/${userId}`, 'PUT', userData),
+    updateUser: async (userId, userData) => await fetchWrapper(`${endpointBase}/${userId}`, 'PUT', userData),
 
-    restoreUser: (email) => fetchWrapper(`${endpointBase}/restore`, 'PATCH', { email }),
+    restoreUser: async (email) => await fetchWrapper(`${endpointBase}/restore`, 'PATCH', { email }),
 
-    resetPassword: (userData) => fetchWrapper(`${endpointBase}/reset-password`, 'PATCH', userData),
+    resetPassword: async (userData) => await fetchWrapper(`${endpointBase}/reset-password`, 'PATCH', userData),
 
-    login: (userData) => fetchWrapper(`${endpointBase}/login`, 'POST', userData),
+    login: async (userData) => await fetchWrapper(`${endpointBase}/login`, 'POST', userData),
 
-    deleteUser: (userId) => fetchWrapper(`${endpointBase}/${userId}`, 'DELETE'),
+    deleteUser: async (userId) => await fetchWrapper(`${endpointBase}/${userId}`, 'DELETE'),
 };
 
 export default userService;

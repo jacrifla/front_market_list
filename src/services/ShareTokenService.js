@@ -3,9 +3,9 @@ import { fetchWrapper } from "../utils/fetchWrapper";
 const endpointBase = '/shared-list-tokens';
 
 const shareTokenService = {
-    generateShareToken: (listId) => fetchWrapper(`${endpointBase}/generate-token`, 'POST', { listId }),
+    generateShareToken: async (listId) => await fetchWrapper(`${endpointBase}/generate-token`, 'POST', { listId }),
 
-    acceptShareToken: (tokenData) => fetchWrapper(`${endpointBase}/accept-token`, 'POST', tokenData),
+    acceptShareToken: async (tokenData) => await fetchWrapper(`${endpointBase}/accept-token`, 'POST', tokenData),
 };
 
 export default shareTokenService;
