@@ -7,11 +7,13 @@ const listService = {
 
     createList: async (userId, listName) => await fetchWrapper(`${endpointBase}`, 'POST', { userId, listName }),
 
-    updateList: async (listId, {listName}) =>  await fetchWrapper(`${endpointBase}/${listId}`, 'PUT', { listName }),
+    updateList: async (listId, { listName }) => await fetchWrapper(`${endpointBase}/${listId}`, 'PUT', { listName }),
 
     deleteList: async (listId) => await fetchWrapper(`${endpointBase}/${listId}`, 'DELETE'),
 
-    markListCompleted: async (listId, totalAmout) => await fetchWrapper(`${endpointBase}/mark/${listId}`, 'PATCH', { totalAmout }),
+    markListCompleted: async ({ listId, userId, totalAmount, purchaseDate }) =>
+        await fetchWrapper(`${endpointBase}/mark/${listId}`, 'PATCH', { userId, totalAmount, purchaseDate }),
+
 }
 
 export default listService;
