@@ -39,8 +39,8 @@ const useListItemService = () => {
         setError(null);
 
         try {
-            await listItemService.updateItem(itemListId, itemData);
-            await fetchItemsByListId(itemData.listId);
+            const res = await listItemService.updateItem(itemListId, itemData);
+            await fetchItemsByListId(res.listId);
         } catch (error) {
             setError(`Erro ao atualizar item à lista. ${error}`)
         } finally {
