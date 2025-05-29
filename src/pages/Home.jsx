@@ -10,6 +10,7 @@ import AddEditListModal from '../components/AddEditListModal';
 import ShareListModal from '../components/ShareListModal';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AddEditListItemModal from '../components/AddEditListItemModal';
 
 export default function Home() {
   const { user } = useContext(AuthContext);
@@ -31,8 +32,6 @@ export default function Home() {
     handleEditList,
     handleDeleteList,
     handleMarkAsBought,
-    handleAddItem,
-    handleEditItem,
     handleDeleteItem,
     setIsSidebarOpen,
     setSelectedItem,
@@ -46,7 +45,18 @@ export default function Home() {
     shareToken,
     isShareModalOpen,
     setIsShareModalOpen,
-  } = useHomeLogic(userId);
+    isItemModalOpen,
+    setIsItemModalOpen,
+    itemModalMode,
+    itemFormData,
+    setItemFormData,
+    openAddItemModal,
+    openEditItemModal,
+    handleItemModalConfirm,
+    suggestions,
+    handleItemNameChange,
+    handleSelectSuggestion,
+  } = useHomeLogic(userId);  
 
   useEffect(() => {
     if (error) toast.error(error);
@@ -101,12 +111,12 @@ export default function Home() {
                 item={selectedItem}
                 onClose={() => setSelectedItem(null)}
                 onMark={handleMarkAsBought}
-                onEdit={handleEditItem}
+                onEdit={openEditItemModal}
                 onDelete={handleDeleteItem}
               />
             )}
 
-            <FloatingAddButton onClick={handleAddItem} />
+            <FloatingAddButton onClick={openAddItemModal} />
           </>
         ) : (
           <p className="text-muted">
@@ -124,6 +134,19 @@ export default function Home() {
         mode={modalMode}
         loading={loading}
       />
+
+      <AddEditListItemModal
+        show={isItemModalOpen}
+        onHide={() => setIsItemModalOpen(false)}
+        onConfirm={handleItemModalConfirm}
+        mode={itemModalMode}
+        formData={itemFormData}
+        setFormData={setItemFormData}
+        suggestions={suggestions}
+        onItemNameChange={handleItemNameChange}
+        onSelectSuggestion={handleSelectSuggestion}
+      />
+
       <ShareListModal
         show={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
