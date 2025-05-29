@@ -1,11 +1,21 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useContext } from 'react';
 import useListService from '../hooks/useListService';
 import useListItemService from '../hooks/useListItemService';
 import useShareTokenService from './useShareTokenService';
 import useItemService from './useItemService';
+import useBrandService from './useBrandService';
+import useCategoryService from './useCategoryService';
+import useUnitService from './useUnitService';
+import useMarketService from './useMarketService';
+import { AuthContext } from '../contexts/AuthContext';
 
-const useHomeLogic = (userId) => {
+const useHomeLogic = () => {
+    const { user } = useContext(AuthContext);
+    const userId = user?.userId;
+
+    const [total, setTotal] = useState(0);
     const [selectedListId, setSelectedListId] = useState(null);
+
     const [selectedItem, setSelectedItem] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -18,6 +28,8 @@ const useHomeLogic = (userId) => {
 
     const [suggestions, setSuggestions] = useState([]);
 
+    const [isConfirmSaveModalOpen, setIsConfirmSaveModalOpen] = useState(false);
+    const [isSaveItemModalOpen, setIsSaveItemModalOpen] = useState(false);
 
     const [isItemModalOpen, setIsItemModalOpen] = useState(false);
     const [itemModalMode, setItemModalMode] = useState('add');
@@ -46,12 +58,44 @@ const useHomeLogic = (userId) => {
         deleteListItem,
     } = useListItemService();
 
+    const {
+        brands,
+        fetchBrands,
+        loading: loadingBrands,
+    } = useBrandService();
+
+    const {
+        categories,
+        fetchCategorys,
+        loading: loadingCategories,
+    } = useCategoryService();
+
+    const {
+        units,
+        fetchUnits,
+        loading: loadingUnits,
+    } = useUnitService();
+
+    const {
+        markets,
+        fetchMarkets,
+        loading: loadingMarkets,
+    } = useMarketService();
+
+    useEffect(() => {
+        fetchBrands();
+        fetchCategorys();
+        fetchUnits();
+        fetchMarkets();
+    }, []);
+
     const selectedList = lists.find((list) => list.listId === selectedListId) || null;
 
-    const total = listItems.reduce(
-        (acc, item) => acc + item.quantity * item.price,
-        0
-    );
+    useEffect(() => {
+        const newTotal = listItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
+        setTotal(newTotal);
+    }, [listItems]);
+
 
     const handleItemNameChange = async (name) => {
         if (itemFormData.itemType === 'common') return;
@@ -71,11 +115,12 @@ const useHomeLogic = (userId) => {
     };
 
     const handleSelectSuggestion = (item) => {
-        setItemFormData({
+        setItemFormData((prev) => ({
+            ...prev,
             itemName: item.itemName,
             itemType: 'common',
             itemId: item.itemId,
-        });
+        }));
         setSuggestions([]);
     };
 
@@ -121,6 +166,7 @@ const useHomeLogic = (userId) => {
         if (selectedListId === listId) {
             setSelectedListId(null);
             setSelectedItem(null);
+            setTotal(0);
         }
     };
 
@@ -138,7 +184,6 @@ const useHomeLogic = (userId) => {
             alert('Erro ao compartilhar a lista.');
         }
     };
-
 
     //   Item
     const openAddItemModal = () => {
@@ -197,13 +242,56 @@ const useHomeLogic = (userId) => {
         await fetchItemsByListId(selectedListId);
     };
 
-    const handleMarkAsBought = async () => {
-        if (!selectedItem) return;
-        await markItemAsBought({
-            listId: selectedListId,
-            itemListId: selectedItem.itemListId,
-        });
+    const handleMarkAsBoughtClick = useCallback((item) => {
+        setSelectedItem(item);
+        setIsConfirmSaveModalOpen(true);
+    }, []);
+
+    const handleCancel = () => {
         setSelectedItem(null);
+        setIsConfirmSaveModalOpen(false);
+        setIsSaveItemModalOpen(false);
+    };
+
+    const handleDontSave = async () => {
+        if (!selectedItem) return;
+
+        await markItemAsBought({
+            userId,
+            itemId: selectedItem.itemId,
+            listId: selectedItem.listId,
+            itemListId: selectedItem.itemListId,
+            categoryId: null,
+            brandId: null,
+            unitId: null,
+            marketId: null,
+            barcode: null,
+        });
+
+        handleCancel();
+    };
+
+    const handleConfirmSave = () => {
+        setIsConfirmSaveModalOpen(false);
+        setIsSaveItemModalOpen(true);
+    };
+
+    const handleSubmitItemInfo = async (data) => {
+        if (!selectedItem) return;
+
+        await markItemAsBought({
+            userId,
+            itemId: selectedItem.itemId,
+            listId: selectedItem.listId,
+            itemListId: selectedItem.itemListId,
+            categoryId: data.categoryId,
+            brandId: data.brandId,
+            unitId: data.unitId,
+            marketId: data.marketId,
+            barcode: data.barcode,
+        });
+
+        handleCancel();
     };
 
     const handleDeleteItem = async () => {
@@ -227,7 +315,7 @@ const useHomeLogic = (userId) => {
         handleAddList,
         handleEditList,
         handleDeleteList,
-        handleMarkAsBought,
+        // handleClickMarkAsBought,
         handleDeleteItem,
         setIsSidebarOpen,
         setSelectedItem,
@@ -254,6 +342,23 @@ const useHomeLogic = (userId) => {
         suggestions,
         handleItemNameChange,
         handleSelectSuggestion,
+
+        handleMarkAsBoughtClick,
+        isConfirmSaveModalOpen,
+        isSaveItemModalOpen,
+        handleCancel,
+        handleDontSave,
+        handleConfirmSave,
+        handleSubmitItemInfo,
+
+        brands,
+        loadingBrands,
+        categories,
+        loadingCategories,
+        units,
+        loadingUnits,
+        markets,
+        loadingMarkets,
     };
 };
 

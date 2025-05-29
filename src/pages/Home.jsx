@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import SidebarLists from '../components/SidebarLists';
 import FloatingAddButton from '../components/FloatingAddButton';
 import ListHeader from '../components/ListHeader';
@@ -11,11 +11,10 @@ import ShareListModal from '../components/ShareListModal';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AddEditListItemModal from '../components/AddEditListItemModal';
+import ConfirmModal from '../components/ConfirmModal';
+import ItemDetailsModal from '../components/ItemDetailsModal';
 
 export default function Home() {
-  const { user } = useContext(AuthContext);
-  const userId = user?.userId;
-
   const {
     selectedList,
     selectedListId,
@@ -31,7 +30,6 @@ export default function Home() {
     handleAddList,
     handleEditList,
     handleDeleteList,
-    handleMarkAsBought,
     handleDeleteItem,
     setIsSidebarOpen,
     setSelectedItem,
@@ -56,7 +54,18 @@ export default function Home() {
     suggestions,
     handleItemNameChange,
     handleSelectSuggestion,
-  } = useHomeLogic(userId);  
+    handleMarkAsBoughtClick,
+    isConfirmSaveModalOpen,
+    isSaveItemModalOpen,
+    handleCancel,
+    handleDontSave,
+    handleConfirmSave,
+    handleSubmitItemInfo,
+    brands,
+    categories,
+    units,
+    markets,
+  } = useHomeLogic();
 
   useEffect(() => {
     if (error) toast.error(error);
@@ -110,7 +119,7 @@ export default function Home() {
               <SelectedItemDetails
                 item={selectedItem}
                 onClose={() => setSelectedItem(null)}
-                onMark={handleMarkAsBought}
+                onMark={() => handleMarkAsBoughtClick(selectedItem)}
                 onEdit={openEditItemModal}
                 onDelete={handleDeleteItem}
               />
@@ -151,6 +160,32 @@ export default function Home() {
         show={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
         token={shareToken}
+      />
+
+      <ConfirmModal
+        show={isConfirmSaveModalOpen}
+        onHide={handleCancel}
+        onConfirm={handleConfirmSave}
+        confirmText="Sim, salvar"
+        cancelText="Cancelar"
+        extraButton={{
+          label: 'Não salvar',
+          variant: 'secondary',
+          onClick: handleDontSave,
+        }}
+        title="Salvar informações do item?"
+        body="Deseja salvar os dados do item? Caso não, enviaremos os campos como nulos."
+      />
+
+      <ItemDetailsModal
+        show={isSaveItemModalOpen}
+        onHide={handleCancel}
+        onSave={handleSubmitItemInfo}
+        item={selectedItem}
+        brands={brands}
+        categories={categories}
+        units={units}
+        markets={markets}
       />
 
       <ToastContainer
