@@ -5,10 +5,25 @@ const useListService = (userId) => {
     const [lists, setLists] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
+
+    const clearMessages = () => {
+        setError(null);
+        setSuccess(null);
+    };
+
+    useEffect(() => {
+        if (error || success) {
+            const timer = setTimeout(() => {
+                clearMessages();
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [error, success]);
 
     const fetchLists = useCallback(async () => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             const data = await listService.fetchListsByUserId(userId);
@@ -22,25 +37,29 @@ const useListService = (userId) => {
 
     const createList = async (listName) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
-            await listService.createList(userId, listName);
+            const newList = await listService.createList(userId, listName);
             await fetchLists();
+            setSuccess('Lista criada com sucesso.');
+            return newList;
         } catch (error) {
             setError('Erro ao criar lista. ', error);
         } finally {
             setLoading(false);
         }
     };
-
-    const updateList = async (listId, {listName}) => {
+    
+    
+    const updateList = async (listId, { listName }) => {
         setLoading(true);
-        setError(null);
-
+        clearMessages();
+        
         try {
-            await listService.updateList(listId, {listName});
+            await listService.updateList(listId, { listName });
             await fetchLists();
+            setSuccess('Lista alterada com sucesso.');
         } catch (error) {
             setError(`Erro ao atualizar a lista. ${error}`);
         } finally {
@@ -50,11 +69,12 @@ const useListService = (userId) => {
 
     const deleteList = async (listId) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             await listService.deleteList(listId);
-            setLists(prev => prev.filter(list => list.id !== listId));
+            setLists(prev => prev.filter(list => list.listId !== listId));
+            setSuccess('Lista deletada com sucesso!');
         } catch (error) {
             setError(`Erro ao deletar lista. ${error}`);
         } finally {
@@ -64,7 +84,7 @@ const useListService = (userId) => {
 
     const markListCompleted = async (listId, totalAmount) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             await listService.markListCompleted(listId, totalAmount);
@@ -88,7 +108,8 @@ const useListService = (userId) => {
         createList,
         updateList,
         deleteList,
-        markListCompleted
+        markListCompleted,
+        success
     }
 };
 
