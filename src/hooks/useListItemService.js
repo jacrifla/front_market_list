@@ -70,7 +70,7 @@ const useListItemService = () => {
             await listItemService.markItemAsBought(purchaseData);
             await fetchItemsByListId(purchaseData.listId);
         } catch (error) {
-            setError(`Erro ao excluir item à lista. ${error}`)
+            setError(`Erro ao marcar item à lista. ${error}`);
         } finally {
             setLoading(false);
         }
