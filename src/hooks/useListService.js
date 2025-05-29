@@ -82,13 +82,16 @@ const useListService = (userId) => {
         }
     };
 
-    const markListCompleted = async (listId, totalAmount) => {
+    const markListCompleted = async ({ listId, userId, totalAmount, purchaseDate }) => {
+        console.log(listId, userId, totalAmount);
+        
         setLoading(true);
         clearMessages();
 
         try {
-            await listService.markListCompleted(listId, totalAmount);
+            await listService.markListCompleted({ listId, userId, totalAmount, purchaseDate });
             await fetchLists();
+            setSuccess('Lista marcada com sucesso')
         } catch (error) {
             setError(`Erro ao marcar lista como concluída. ${error}`);
         } finally {
