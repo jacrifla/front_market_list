@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import AddEditListItemModal from '../components/AddEditListItemModal';
 import ConfirmModal from '../components/ConfirmModal';
 import ItemDetailsModal from '../components/ItemDetailsModal';
+import PurchaseDateModal from '../components/PurchaseDateModal';
 
 export default function Home() {
   const {
@@ -54,7 +55,6 @@ export default function Home() {
     suggestions,
     handleItemNameChange,
     handleSelectSuggestion,
-    handleMarkAsBoughtClick,
     isConfirmSaveModalOpen,
     isSaveItemModalOpen,
     handleCancel,
@@ -65,6 +65,15 @@ export default function Home() {
     categories,
     units,
     markets,
+    isPurchaseDateModalOpen,
+    handlePurchaseDateSelected,
+    setIsPurchaseDateModalOpen,
+    setPendingMarkAsBought,
+    handleCheckItem,
+    isConfirmDeleteModalOpen,
+    handleCancelDelete,
+    handleConfirmDelete,
+    handleCompleteList
   } = useHomeLogic();
 
   useEffect(() => {
@@ -90,7 +99,7 @@ export default function Home() {
         selectedListId={selectedListId}
         onSelectList={handleSelectList}
         onAddList={handleAddList}
-        // onMarkPurchased={}
+        onMarkPurchased={handleCompleteList}
         onEditList={handleEditList}
         onDeleteList={handleDeleteList}
         onShareList={handleShareList}
@@ -119,7 +128,7 @@ export default function Home() {
               <SelectedItemDetails
                 item={selectedItem}
                 onClose={() => setSelectedItem(null)}
-                onMark={() => handleMarkAsBoughtClick(selectedItem)}
+                onMark={() => handleCheckItem(selectedItem)}
                 onEdit={openEditItemModal}
                 onDelete={handleDeleteItem}
               />
@@ -177,6 +186,16 @@ export default function Home() {
         body="Deseja salvar os dados do item? Caso não, enviaremos os campos como nulos."
       />
 
+      <ConfirmModal
+        show={isConfirmDeleteModalOpen}
+        onHide={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        title="Deseja excluir a lista?"
+        body="A lista foi marcada como comprada. Deseja excluí-la permanentemente?"
+        confirmText="Sim, excluir"
+        cancelText="Não"
+      />
+
       <ItemDetailsModal
         show={isSaveItemModalOpen}
         onHide={handleCancel}
@@ -186,6 +205,15 @@ export default function Home() {
         categories={categories}
         units={units}
         markets={markets}
+      />
+
+      <PurchaseDateModal
+        show={isPurchaseDateModalOpen}
+        onClose={() => {
+          setIsPurchaseDateModalOpen(false);
+          setPendingMarkAsBought(null);
+        }}
+        onConfirm={handlePurchaseDateSelected}
       />
 
       <ToastContainer
