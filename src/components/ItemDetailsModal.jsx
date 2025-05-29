@@ -1,0 +1,119 @@
+import { useEffect, useState } from 'react';
+import { Modal, Button, Form } from 'react-bootstrap';
+
+export default function ItemDetailsModal({
+  show,
+  onHide,
+  onSave,
+  item,
+  brands = [],
+  categories = [],
+  units = [],
+  markets = [],
+}) {
+  const [formData, setFormData] = useState({
+    brandId: '',
+    categoryId: '',
+    unitId: '',
+    barcode: '',
+    marketId: '',
+  });
+
+  useEffect(() => {
+    if (show) {
+      setFormData({
+        brandId: '',
+        categoryId: '',
+        unitId: '',
+        barcode: '',
+        marketId: '',
+      });
+    }
+  }, [show]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = () => {
+    onSave({
+      ...formData,
+      brandId: formData.brandId || null,
+      categoryId: formData.categoryId || null,
+      unitId: formData.unitId || null,
+      barcode: formData.barcode || null,
+      marketId: formData.marketId || null,
+    });
+  };  
+
+  return (
+    <Modal show={show} onHide={onHide} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>
+          Informações do item: <strong>{item?.name || 'Item desconhecido'}</strong>
+        </Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body>
+        <Form>
+          <Form.Group className="mb-3">
+            <Form.Label>Categoria</Form.Label>
+            <Form.Select name="categoryId" value={formData.categoryId} onChange={handleChange}>
+              <option value="">Selecione</option>
+              {categories.map((cat) => (
+                <option key={cat.categoryId} value={cat.categoryId}>{cat.categoryName}</option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Marca</Form.Label>
+            <Form.Select name="brandId" value={formData.brandId} onChange={handleChange}>
+              <option value="">Selecione</option>
+              {brands.map((brand) => (
+                <option key={brand.brandId} value={brand.brandId}>{brand.brandName}</option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Unidade de medida</Form.Label>
+            <Form.Select name="unitId" value={formData.unitId} onChange={handleChange}>
+              <option value="">Selecione</option>
+              {units.map((unit) => (
+                <option key={unit.unitId} value={unit.unitId}>{unit.unitName}</option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Código de barras</Form.Label>
+            <Form.Control
+              type="text"
+              name="barcode"
+              value={formData.barcode}
+              onChange={handleChange}
+              placeholder="Digite ou escaneie"
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Mercado</Form.Label>
+            <Form.Select name="marketId" value={formData.marketId} onChange={handleChange}>
+              <option value="">Selecione</option>
+              {markets.map((market) => (
+                <option key={market.marketId} value={market.marketId}>{market.marketName}</option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+        </Form>
+      </Modal.Body>
+
+      <Modal.Footer>
+        <Button variant="secondary" onClick={onHide}>Cancelar</Button>
+        <Button variant="success" onClick={handleSubmit}>Salvar</Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}
