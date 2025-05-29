@@ -1,6 +1,4 @@
 export default function ItemCard({ item, index, selectedItem, onSelect }) {
-  console.log(item);
-  
   const isSelected = selectedItem?.itemListId === item.itemListId;
   const isBought = item.purchasedAt;
 
