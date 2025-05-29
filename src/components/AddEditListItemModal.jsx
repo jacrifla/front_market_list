@@ -10,20 +10,19 @@ export default function AddEditListItemModal({
   setFormData,
   suggestions,
   onItemNameChange,
-  onSelectSuggestion
+  onSelectSuggestion,
 }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  console.log(formData);
-  
-
   return (
-    <Modal show={show} onHide={onHide}>
+    <Modal show={show} onHide={onHide} backdrop="static">
       <Modal.Header closeButton>
-        <Modal.Title>{mode === 'add' ? 'Adicionar Item' : 'Editar Item'}</Modal.Title>
+        <Modal.Title>
+          {mode === 'add' ? 'Adicionar Item' : 'Editar Item'}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -31,9 +30,12 @@ export default function AddEditListItemModal({
             <Form.Label>Nome do Item</Form.Label>
             <Form.Control
               name="itemName"
-              value={formData.itemName}
+              value={formData.itemName || ''}
               onChange={(e) => onItemNameChange(e.target.value)}
               autoComplete="off"
+              aria-autocomplete="list"
+              aria-haspopup="true"
+              aria-expanded={suggestions.length > 0}
               disabled={formData.itemType === 'common'}
             />
             {suggestions.length > 0 && (
@@ -45,7 +47,9 @@ export default function AddEditListItemModal({
                   border: '1px solid #ccc',
                   width: '100%',
                   maxHeight: '150px',
-                  overflowY: 'auto'
+                  overflowY: 'auto',
+                  borderRadius: '0.375rem',
+                  boxShadow: '0 0.5rem 1rem rgba(0, 0, 0, 0.1)',
                 }}
               >
                 {suggestions.map((sug, idx) => (
@@ -53,10 +57,16 @@ export default function AddEditListItemModal({
                     key={idx}
                     onClick={() => onSelectSuggestion(sug)}
                     style={{
-                      padding: '8px',
+                      padding: '8px 12px',
                       cursor: 'pointer',
                       borderBottom: '1px solid #eee',
                     }}
+                    onMouseOver={(e) =>
+                      (e.currentTarget.style.backgroundColor = '#f8f9fa')
+                    }
+                    onMouseOut={(e) =>
+                      (e.currentTarget.style.backgroundColor = 'white')
+                    }
                   >
                     {sug.itemName}
                   </div>
@@ -88,8 +98,12 @@ export default function AddEditListItemModal({
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={onHide}>Cancelar</Button>
-        <Button variant="primary" onClick={onConfirm}>Salvar</Button>
+        <Button variant="secondary" onClick={onHide}>
+          Cancelar
+        </Button>
+        <Button variant="primary" onClick={onConfirm} disabled={!formData.itemName || formData.quantity <= 0}>
+          Salvar
+        </Button>
       </Modal.Footer>
     </Modal>
   );
