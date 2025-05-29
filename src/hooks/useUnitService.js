@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react"
 import unitService from "../services/UnitService";
 
 const useUnitService = () => {
-    const [markets, setUnits] = useState([]);
+    const [units, setUnits] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -67,7 +67,7 @@ const useUnitService = () => {
     }, [fetchUnits])
 
     return {
-        markets,
+        units,
         loading,
         error,
         fetchUnits,
