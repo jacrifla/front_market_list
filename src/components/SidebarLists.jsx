@@ -64,7 +64,8 @@ export default function SidebarLists({
             return (
               <div
                 key={list.listId}
-                className={`list-item btn btn-light w-100 mb-3 text-start ${isSelected ? 'active' : ''}`}
+               className={`list-item btn w-100 mb-3 text-start ${isSelected ? 'active' : ''} ${list.completedAt ? 'bg-success bg-opacity-25 border-success' : 'btn-light'}`}
+
                 style={{ padding: '0.75rem' }}
               >
                 {/* Nome e Data lado a lado */}
@@ -88,10 +89,11 @@ export default function SidebarLists({
                 <div className="btn-group btn-group-sm mt-2 w-100" onClick={(e) => e.stopPropagation()}>
                   <button
                     className="btn btn-outline-success flex-fill"
-                    title="Marcar como comprada"
+                    title={list.completedAt ? "Já comprada" : "Marcar como comprada"}
                     onClick={() => onMarkPurchased(list.listId)}
+                    disabled={!!list.completedAt}
                   >
-                    <i className="bi bi-check2-square"></i>
+                     <i className={`bi ${list.completedAt ? 'bi-check-circle-fill' : 'bi-check2-square'}`}></i>
                   </button>
                   <button
                     className="btn btn-outline-warning flex-fill"
