@@ -1,23 +1,33 @@
 import purchaseService from '../services/purchaseService';
 
 const usePurchaseService = () => {
-    const getTotalSpentByPeriod = (userId, startDate, endDate) =>
-        purchaseService.getTotalSpentByPeriod(userId, startDate, endDate);
+    const getTotalSpentByPeriod = async (userId, startDate, endDate) => {
+        const res = await purchaseService.getTotalSpentByPeriod(userId, startDate, endDate);
+        return res?.totalSpent ?? 0;
+    };
 
     const getMostPurchasedItems = (userId, limit) =>
         purchaseService.getMostPurchasedItems(userId, limit);
 
-    const getItemsPurchasedByPeriod = (userId, startDate, endDate) =>
-        purchaseService.getItemsPurchasedByPeriod(userId, startDate, endDate);
+    const getItemsPurchasedByPeriod = async (userId, startDate, endDate) => {
+        const res = await purchaseService.getItemsPurchasedByPeriod(userId, startDate, endDate);
+        return res?.totalQuantity ?? 0;
+    };
 
-    const getAvgSpendPerPurchase = (userId, startDate, endDate) =>
-        purchaseService.getAvgSpendPerPurchase(userId, startDate, endDate);
+    const getAvgSpendPerPurchase = async (userId, startDate, endDate) => {
+        const res = await purchaseService.getAvgSpendPerPurchase(userId, startDate, endDate);
+        return res?.avgSpendPerPurchase ?? 0;
+    };
 
-    const getLargestPurchase = (userId, startDate, endDate) =>
-        purchaseService.getLargestPurchase(userId, startDate, endDate);
+    const getLargestPurchase = async (userId, startDate, endDate) => {
+        const res = await purchaseService.getLargestPurchase(userId, startDate, endDate);
+        return typeof res === 'number' ? res : 0;
+    };
 
-    const getAvgDailySpend = (userId, startDate, endDate) =>
-        purchaseService.getAvgDailySpend(userId, startDate, endDate);
+    const getAvgDailySpend = async (userId, startDate, endDate) => {
+        const res = await purchaseService.getAvgDailySpend(userId, startDate, endDate);
+        return res?.avgDailySpend ?? 0;
+    };
 
     const getCategoryPurchases = (userId, startDate, endDate) =>
         purchaseService.getCategoryPurchases(userId, startDate, endDate);
