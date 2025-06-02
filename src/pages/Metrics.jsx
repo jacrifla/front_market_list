@@ -12,21 +12,22 @@ export default function Metrics() {
   const { user } = useContext(AuthContext);
   const { fetchMetricsData } = useMetricsService();
 
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
   const [metrics, setMetrics] = useState(null);
   const [loading, setLoading] = useState(false);
+  
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  
+  const defaultStart = `${currentYear}-01-01`;
+  const defaultEnd = today.toISOString().split('T')[0];
+
+  const [startDate, setStartDate] = useState(defaultStart);
+  const [endDate, setEndDate] = useState(defaultEnd);
 
   const handleFetchMetrics = async () => {
-    const today = new Date();
-    const currentYear = today.getFullYear();
-
-    const start = startDate || `${currentYear}-01-01`;
-    const end = endDate || today.toISOString().split('T')[0];
-
     setLoading(true);
     try {
-      const data = await fetchMetricsData(user.userId, start, end);
+      const data = await fetchMetricsData(user.userId, startDate, endDate);
       setMetrics(data);
     } catch (err) {
       alert('Erro ao buscar métricas.');
