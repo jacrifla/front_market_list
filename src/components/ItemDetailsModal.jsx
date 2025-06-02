@@ -45,13 +45,14 @@ export default function ItemDetailsModal({
       barcode: formData.barcode || null,
       marketId: formData.marketId || null,
     });
-  };  
-
+  };
+  
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>
-          Informações do item: <strong>{item?.name || 'Item desconhecido'}</strong>
+          Informações do item:{' '}
+          <strong>{item?.itemName || 'Item desconhecido'}</strong>
         </Modal.Title>
       </Modal.Header>
 
@@ -59,30 +60,57 @@ export default function ItemDetailsModal({
         <Form>
           <Form.Group className="mb-3">
             <Form.Label>Categoria</Form.Label>
-            <Form.Select name="categoryId" value={formData.categoryId} onChange={handleChange}>
+            <Form.Select
+              name="categoryId"
+              value={formData.categoryId}
+              onChange={handleChange}
+            >
               <option value="">Selecione</option>
               {categories.map((cat) => (
-                <option key={cat.categoryId} value={cat.categoryId}>{cat.categoryName}</option>
+                <option key={cat.categoryId} value={cat.categoryId}>
+                  {cat.categoryName}
+                </option>
               ))}
             </Form.Select>
+
+            {formData.categoryId && (
+              <Form.Text className="text-muted mt-1 d-block">
+                {categories.find(
+                  (cat) =>
+                    String(cat.categoryId) === String(formData.categoryId)
+                )?.description || 'Sem descrição disponível.'}
+              </Form.Text>
+            )}
           </Form.Group>
 
           <Form.Group className="mb-3">
             <Form.Label>Marca</Form.Label>
-            <Form.Select name="brandId" value={formData.brandId} onChange={handleChange}>
+            <Form.Select
+              name="brandId"
+              value={formData.brandId}
+              onChange={handleChange}
+            >
               <option value="">Selecione</option>
               {brands.map((brand) => (
-                <option key={brand.brandId} value={brand.brandId}>{brand.brandName}</option>
+                <option key={brand.brandId} value={brand.brandId}>
+                  {brand.brandName}
+                </option>
               ))}
             </Form.Select>
           </Form.Group>
 
           <Form.Group className="mb-3">
             <Form.Label>Unidade de medida</Form.Label>
-            <Form.Select name="unitId" value={formData.unitId} onChange={handleChange}>
+            <Form.Select
+              name="unitId"
+              value={formData.unitId}
+              onChange={handleChange}
+            >
               <option value="">Selecione</option>
               {units.map((unit) => (
-                <option key={unit.unitId} value={unit.unitId}>{unit.unitName}</option>
+                <option key={unit.unitId} value={unit.unitId}>
+                  {unit.unitName}
+                </option>
               ))}
             </Form.Select>
           </Form.Group>
@@ -100,10 +128,16 @@ export default function ItemDetailsModal({
 
           <Form.Group className="mb-3">
             <Form.Label>Mercado</Form.Label>
-            <Form.Select name="marketId" value={formData.marketId} onChange={handleChange}>
+            <Form.Select
+              name="marketId"
+              value={formData.marketId}
+              onChange={handleChange}
+            >
               <option value="">Selecione</option>
               {markets.map((market) => (
-                <option key={market.marketId} value={market.marketId}>{market.marketName}</option>
+                <option key={market.marketId} value={market.marketId}>
+                  {market.marketName}
+                </option>
               ))}
             </Form.Select>
           </Form.Group>
@@ -111,8 +145,12 @@ export default function ItemDetailsModal({
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="secondary" onClick={onHide}>Cancelar</Button>
-        <Button variant="success" onClick={handleSubmit}>Salvar</Button>
+        <Button variant="secondary" onClick={onHide}>
+          Cancelar
+        </Button>
+        <Button variant="success" onClick={handleSubmit}>
+          Salvar
+        </Button>
       </Modal.Footer>
     </Modal>
   );
