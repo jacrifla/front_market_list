@@ -32,7 +32,7 @@ export default function useMetricsService() {
     ]);
 
     return {
-      totalSpent: Number(totalSpent?.totalSpent) || 0,
+      totalSpent: Number(totalSpent) || 0,
       avgSpend: Number(avgSpend) || 0,
       largestPurchase: Number(largestPurchase) || 0,
       avgDailySpend: Number(avgDailySpend) || 0,
