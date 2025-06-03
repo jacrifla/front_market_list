@@ -5,10 +5,16 @@ const useCategoryService = () => {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
+
+    const clearMessages = () => {
+        setError(null);
+        setSuccess(null);
+    };
 
     const fetchCategorys = useCallback(async () => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             const data = await categoryService.getAllCategorys();
@@ -22,11 +28,12 @@ const useCategoryService = () => {
 
     const createCategory = async (categoryName) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             await categoryService.createCategory({ categoryName });
             await fetchCategorys();
+            setSuccess("Categoria criada com sucesso!");
         } catch (error) {
             setError(`Erro ao criar categoria. ${error}`);
         } finally {
@@ -36,11 +43,12 @@ const useCategoryService = () => {
 
     const updateCategory = async (categoryId, categoryName) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             await categoryService.updateCategory(categoryId, { categoryName });
             await fetchCategorys();
+            setSuccess("Categoria atualizada com sucesso!");
         } catch (error) {
             setError(`Erro ao atualizar categoria. ${error}`);
         } finally {
@@ -50,11 +58,12 @@ const useCategoryService = () => {
 
     const deleteCategory = async (categoryId) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             await categoryService.deleteCategory(categoryId);
-            setCategories(prev => prev.filter(category => category.id !== categoryId));
+            setCategories(prev => prev.filter(category => category.categoryId !== categoryId));
+            setSuccess("Categoria deletada com sucesso!");
         } catch (error) {
             setError(`Erro ao deletar categoria. ${error}`);
         } finally {
@@ -70,6 +79,7 @@ const useCategoryService = () => {
         categories,
         loading,
         error,
+        success,
         fetchCategorys,
         createCategory,
         updateCategory,

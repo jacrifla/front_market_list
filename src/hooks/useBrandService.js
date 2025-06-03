@@ -5,10 +5,16 @@ const useBrandService = () => {
     const [brands, setBrands] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
+
+    const clearMessages = () => {
+        setError(null);
+        setSuccess(null);
+    };
 
     const fetchBrands = useCallback(async () => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             const data = await brandService.getAllBrands();
@@ -22,11 +28,12 @@ const useBrandService = () => {
 
     const createBrand = async (brandName) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             await brandService.createBrand({ brandName });
             await fetchBrands();
+            setSuccess("Marca criada com sucesso!");
         } catch (error) {
             setError(`Erro ao criar marca. ${error}`);
         } finally {
@@ -36,11 +43,12 @@ const useBrandService = () => {
 
     const updateBrand = async (brandId, brandName) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             await brandService.updateBrand(brandId, { brandName });
             await fetchBrands();
+            setSuccess("Marca atualizada com sucesso!");
         } catch (error) {
             setError(`Erro ao atualizar marca. ${error}`);
         } finally {
@@ -50,11 +58,12 @@ const useBrandService = () => {
 
     const deleteBrand = async (brandId) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             await brandService.deleteBrand(brandId);
-            setBrands(prev => prev.filter(brand => brand.id !== brandId));
+            setBrands(prev => prev.filter(brand => brand.brandId !== brandId));
+            setSuccess("Marca deletada com sucesso!");
         } catch (error) {
             setError(`Erro ao deletar marca. ${error}`);
         } finally {
@@ -70,6 +79,7 @@ const useBrandService = () => {
         brands,
         loading,
         error,
+        success,
         fetchBrands,
         createBrand,
         updateBrand,

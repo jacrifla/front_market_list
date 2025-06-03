@@ -5,10 +5,16 @@ const useUnitService = () => {
     const [units, setUnits] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
+
+    const clearMessages = () => {
+        setError(null);
+        setSuccess(null);
+    };
 
     const fetchUnits = useCallback(async () => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             const data = await unitService.getAllUnits();
@@ -22,11 +28,12 @@ const useUnitService = () => {
 
     const createUnit = async (unitName) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             await unitService.createUnit({ unitName });
             await fetchUnits();
+            setSuccess("Unidade criada com sucesso!");
         } catch (error) {
             setError(`Erro ao criar unidade. ${error}`);
         } finally {
@@ -36,11 +43,12 @@ const useUnitService = () => {
 
     const updateUnit = async (unitId, unitName) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             await unitService.updateUnit(unitId, { unitName });
             await fetchUnits();
+            setSuccess("Unidade atualizada com sucesso!");
         } catch (error) {
             setError(`Erro ao atualizar unidade. ${error}`);
         } finally {
@@ -50,11 +58,12 @@ const useUnitService = () => {
 
     const deleteUnit = async (unitId) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             await unitService.deleteUnit(unitId);
-            setUnits(prev => prev.filter(Unit => Unit.id !== unitId));
+            setUnits(prev => prev.filter(unit => unit.unitId !== unitId));
+            setSuccess("Unidade deletada com sucesso!");
         } catch (error) {
             setError(`Erro ao deletar unidade. ${error}`);
         } finally {
@@ -70,6 +79,7 @@ const useUnitService = () => {
         units,
         loading,
         error,
+        success,
         fetchUnits,
         createUnit,
         updateUnit,

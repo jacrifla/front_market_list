@@ -5,10 +5,16 @@ const useMarketService = () => {
     const [markets, setMarkets] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
+
+    const clearMessages = () => {
+        setError(null);
+        setSuccess(null);
+    };
 
     const fetchMarkets = useCallback(async () => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             const data = await marketService.getAllMarkets();
@@ -22,11 +28,12 @@ const useMarketService = () => {
 
     const createMarket = async (marketName) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             await marketService.createMarket({ marketName });
             await fetchMarkets();
+            setSuccess("Mercado criado com sucesso!");
         } catch (error) {
             setError(`Erro ao criar mercado. ${error}`);
         } finally {
@@ -36,11 +43,12 @@ const useMarketService = () => {
 
     const updateMarket = async (marketId, marketName) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             await marketService.updateMarket(marketId, { marketName });
             await fetchMarkets();
+            setSuccess("Mercado atualizado com sucesso!");
         } catch (error) {
             setError(`Erro ao atualizar mercado. ${error}`);
         } finally {
@@ -50,11 +58,12 @@ const useMarketService = () => {
 
     const deleteMarket = async (marketId) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             await marketService.deleteMarket(marketId);
-            setMarkets(prev => prev.filter(Market => Market.id !== marketId));
+            setMarkets(prev => prev.filter(Market => Market.marketId !== marketId));
+            setSuccess("Mercado deletado com sucesso!");
         } catch (error) {
             setError(`Erro ao deletar mercado. ${error}`);
         } finally {
@@ -70,6 +79,7 @@ const useMarketService = () => {
         markets,
         loading,
         error,
+        success,
         fetchMarkets,
         createMarket,
         updateMarket,
