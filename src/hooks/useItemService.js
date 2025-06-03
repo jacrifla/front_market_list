@@ -6,10 +6,16 @@ const useItemService = () => {
     const [selectedItem, setSelectedItem] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
+
+    const clearMessages = () => {
+        setError(null);
+        setSuccess(null);
+    }
 
     const fetchAllItems = useCallback(async () => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             const data = await itemService.getAllItems();
@@ -23,7 +29,7 @@ const useItemService = () => {
 
     const fetchItemById = async (itemId) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             const data = await itemService.getItemById(itemId);
@@ -37,7 +43,7 @@ const useItemService = () => {
 
     const searchItemByBarcodeOrName = async (term) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             const data = await itemService.getItemByBarcodeName(term);
@@ -51,11 +57,12 @@ const useItemService = () => {
 
     const createItem = async (itemData) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             await itemService.createItem(itemData);
             await fetchAllItems();
+            setSuccess('Item criado com sucesso.');
         } catch (error) {
             setError(`Erro ao criar item. ${error}`);
         } finally {
@@ -65,11 +72,12 @@ const useItemService = () => {
 
     const updateItem = async (itemId, itemData) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             await itemService.updateItem(itemId, itemData);
             await fetchAllItems();
+            setSuccess('Item atualizado com sucesso.');
         } catch (error) {
             setError(`Erro ao atualizar item. ${error}`);
         } finally {
@@ -79,11 +87,12 @@ const useItemService = () => {
 
     const deleteItem = async (itemId) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             await itemService.deleteItem(itemId);
             await fetchAllItems();
+            setSuccess('Item deletado com sucesso.');
         } catch (error) {
             setError(`Erro ao deletar item. ${error}`);
         } finally {
@@ -100,6 +109,7 @@ const useItemService = () => {
         selectedItem,
         loading,
         error,
+        success,
         fetchAllItems,
         fetchItemById,
         searchItemByBarcodeOrName,
