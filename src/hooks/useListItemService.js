@@ -5,6 +5,12 @@ const useListItemService = () => {
     const [listItems, setListItems] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
+
+    const clearMessages = () => {
+        setError(null);
+        setSuccess(null);
+    };
 
     const fetchItemsByListId = useCallback(async (listId) => {
         setLoading(true);
@@ -22,11 +28,12 @@ const useListItemService = () => {
 
     const addListItem = async (itemData) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             await listItemService.createItem(itemData);
             await fetchItemsByListId(itemData.listId);
+            setSuccess("Item adicionado com sucesso!");
         } catch (error) {
             setError(`Erro ao adicionar item à lista. ${error}`)
         } finally {
@@ -36,11 +43,12 @@ const useListItemService = () => {
 
     const updateListItem = async (itemListId, itemData) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             const res = await listItemService.updateItem(itemListId, itemData);
             await fetchItemsByListId(res.listId);
+            setSuccess("Item atualizado com sucesso!");
         } catch (error) {
             setError(`Erro ao atualizar item à lista. ${error}`)
         } finally {
@@ -50,11 +58,12 @@ const useListItemService = () => {
 
     const deleteListItem = async (itemListId, listId) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             await listItemService.deleteItem(itemListId);
             await fetchItemsByListId(listId);
+            setSuccess("Item excluído com sucesso!");
         } catch (error) {
             setError(`Erro ao excluir item à lista. ${error}`)
         } finally {
@@ -64,11 +73,12 @@ const useListItemService = () => {
 
     const markItemAsBought = async (purchaseData) => {
         setLoading(true);
-        setError(null);
+        clearMessages();
 
         try {
             await listItemService.markItemAsBought(purchaseData);
             await fetchItemsByListId(purchaseData.listId);
+            setSuccess("Item marcado como comprado!");
         } catch (error) {
             setError(`Erro ao marcar item à lista. ${error}`);
         } finally {
@@ -80,6 +90,7 @@ const useListItemService = () => {
         listItems,
         loading,
         error,
+        success,
         fetchItemsByListId,
         addListItem,
         updateListItem,
