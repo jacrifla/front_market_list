@@ -3,6 +3,7 @@ import { Container, Nav, Navbar, Button } from 'react-bootstrap';
 import useAuth from '../hooks/useAuth';
 import { useState } from 'react';
 import ConfirmModal from '../components/ConfirmModal';
+import { ToastContainer } from 'react-toastify';
 
 export default function MainLayout() {
   const { user, logout } = useAuth();
@@ -67,6 +68,8 @@ export default function MainLayout() {
       <div>
         <Outlet />
       </div>
+
+      <ToastContainer position="top-right" autoClose={3000} />
 
       <ConfirmModal
         show={showConfirm}
