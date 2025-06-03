@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
-import useCategoryService from '../hooks/useCategoryService';
-import useToastMessage from '../hooks/useToastMessage';
+import useCategoryService from '../../hooks/useCategoryService';
+import useToastMessage from '../../hooks/useToastMessage';
 
 export default function CategoryRegisterForm() {
   const {
