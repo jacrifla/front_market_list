@@ -26,12 +26,12 @@ const useCategoryService = () => {
         }
     }, []);
 
-    const createCategory = async (categoryName) => {
+    const createCategory = async (categoryData) => {
         setLoading(true);
         clearMessages();
 
         try {
-            await categoryService.createCategory({ categoryName });
+            await categoryService.createCategory(categoryData);
             await fetchCategorys();
             setSuccess("Categoria criada com sucesso!");
         } catch (error) {
@@ -41,12 +41,12 @@ const useCategoryService = () => {
         }
     };
 
-    const updateCategory = async (categoryId, categoryName) => {
+    const updateCategory = async (categoryId, categoryData) => {
         setLoading(true);
         clearMessages();
 
         try {
-            await categoryService.updateCategory(categoryId, { categoryName });
+            await categoryService.updateCategory(categoryId, categoryData);
             await fetchCategorys();
             setSuccess("Categoria atualizada com sucesso!");
         } catch (error) {

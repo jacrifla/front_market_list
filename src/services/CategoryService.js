@@ -3,9 +3,9 @@ import { fetchWrapper } from "../utils/fetchWrapper";
 const endpointBase = '/category';
 
 const categoryService = {
-    createCategory: async (categoryName) => fetchWrapper(`${endpointBase}`, 'POST', { categoryName }),
-
-    updateCategory: async (categoryId, categoryName) => fetchWrapper(`${endpointBase}/${categoryId}`, 'PUT', { categoryName }),
+    createCategory: async (category) => fetchWrapper(`${endpointBase}`, 'POST', category),
+    
+    updateCategory: async (categoryId, category) => fetchWrapper(`${endpointBase}/${categoryId}`, 'PUT', category),
 
     deleteCategory: async (categoryId) => fetchWrapper(`${endpointBase}/${categoryId}`, 'DELETE'),
 
