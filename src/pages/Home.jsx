@@ -24,8 +24,10 @@ export default function Home() {
     lists,
     listItems,
     loading,
-    error,
-    success,
+    errorList,
+    errorItem,
+    successList,
+    successItem,
     total,
     handleSelectList,
     handleAddList,
@@ -73,16 +75,24 @@ export default function Home() {
     isConfirmDeleteModalOpen,
     handleCancelDelete,
     handleConfirmDelete,
-    handleCompleteList
+    handleCompleteList,
   } = useHomeLogic();
 
   useEffect(() => {
-    if (error) toast.error(error);
-  }, [error]);
+    if (errorList) toast.error(errorList);
+  }, [errorList]);
 
   useEffect(() => {
-    if (success) toast.success(success);
-  }, [success]);
+    if (errorItem) toast.error(errorItem);
+  }, [errorItem]);
+
+  useEffect(() => {
+    if (successList) toast.success(successList);
+  }, [successList]);
+
+  useEffect(() => {
+    if (successItem) toast.success(successItem);
+  }, [successItem]);
 
   return (
     <div className="container-fluid">
@@ -214,17 +224,6 @@ export default function Home() {
           setPendingMarkAsBought(null);
         }}
         onConfirm={handlePurchaseDateSelected}
-      />
-
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        pauseOnHover
-        draggable
-        pauseOnFocusLoss
       />
     </div>
   );

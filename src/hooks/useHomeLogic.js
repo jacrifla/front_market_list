@@ -46,8 +46,18 @@ const useHomeLogic = () => {
         itemType: 'common',
     });
 
-    const { lists, createList, updateList, deleteList, markListCompleted, success } = useListService(userId);
     const { generateShareToken } = useShareTokenService();
+
+    const {
+        lists,
+        createList,
+        updateList,
+        deleteList,
+        markListCompleted,
+        success: listSuccess,
+        error: listError,
+    } = useListService(userId);
+
     const {
         searchItemByBarcodeOrName,
         items: itemSuggestions
@@ -56,7 +66,8 @@ const useHomeLogic = () => {
     const {
         listItems,
         loading,
-        error,
+        error: itemError,
+        success: itemSuccess,
         fetchItemsByListId,
         markItemAsBought,
         addListItem,
@@ -93,7 +104,7 @@ const useHomeLogic = () => {
         fetchCategorys();
         fetchUnits();
         fetchMarkets();
-    }, []);
+    }, [fetchBrands, fetchCategorys, fetchUnits, fetchMarkets]);
 
     const selectedList = lists.find((list) => list.listId === selectedListId) || null;
 
@@ -367,7 +378,8 @@ const useHomeLogic = () => {
         lists,
         listItems,
         loading,
-        error,
+        errorList: listError,
+        errorItem: itemError,
         total,
         handleSelectList,
         handleAddList,
@@ -386,8 +398,8 @@ const useHomeLogic = () => {
         shareToken,
         isShareModalOpen,
         setIsShareModalOpen,
-        success,
-
+        successList: listSuccess,
+        successItem: itemSuccess,
         isItemModalOpen,
         setIsItemModalOpen,
         itemModalMode,
