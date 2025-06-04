@@ -61,7 +61,7 @@ export default function ItemRegisterForm() {
     if (categoryError) showToast(categoryError, 'error');
     if (brandError) showToast(brandError, 'error');
     if (unitError) showToast(unitError, 'error');
-  }, [itemSuccess, itemError, categoryError, brandError, unitError]);
+  }, [itemSuccess, itemError, categoryError, brandError, unitError, showToast]);
 
   // Buscar dados no mount
   useEffect(() => {
