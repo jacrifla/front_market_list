@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import SidebarLists from '../components/SidebarLists';
 import FloatingAddButton from '../components/FloatingAddButton';
 import ListHeader from '../components/ListHeader';
@@ -8,12 +7,12 @@ import SelectedItemDetails from '../components/SelectedItemDetail';
 import useHomeLogic from '../hooks/useHomeLogic';
 import AddEditListModal from '../components/AddEditListModal';
 import ShareListModal from '../components/ShareListModal';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AddEditListItemModal from '../components/AddEditListItemModal';
 import ConfirmModal from '../components/ConfirmModal';
 import ItemDetailsModal from '../components/ItemDetailsModal';
 import PurchaseDateModal from '../components/PurchaseDateModal';
+import useToastMessage from '../hooks/useToastMessage';
 
 export default function Home() {
   const {
@@ -78,21 +77,10 @@ export default function Home() {
     handleCompleteList,
   } = useHomeLogic();
 
-  useEffect(() => {
-    if (errorList) toast.error(errorList);
-  }, [errorList]);
-
-  useEffect(() => {
-    if (errorItem) toast.error(errorItem);
-  }, [errorItem]);
-
-  useEffect(() => {
-    if (successList) toast.success(successList);
-  }, [successList]);
-
-  useEffect(() => {
-    if (successItem) toast.success(successItem);
-  }, [successItem]);
+  useToastMessage(null, errorList);
+  useToastMessage(null, errorItem);
+  useToastMessage(successList, null);
+  useToastMessage(successItem, null);
 
   return (
     <div className="container-fluid">
