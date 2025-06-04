@@ -31,7 +31,7 @@ const useBrandService = () => {
         clearMessages();
 
         try {
-            await brandService.createBrand({ brandName });
+            await brandService.createBrand(brandName);
             await fetchBrands();
             setSuccess("Marca criada com sucesso!");
         } catch (error) {
@@ -46,7 +46,7 @@ const useBrandService = () => {
         clearMessages();
 
         try {
-            await brandService.updateBrand(brandId, { brandName });
+            await brandService.updateBrand(brandId, brandName);
             await fetchBrands();
             setSuccess("Marca atualizada com sucesso!");
         } catch (error) {

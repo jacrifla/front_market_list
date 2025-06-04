@@ -31,7 +31,7 @@ const useMarketService = () => {
         clearMessages();
 
         try {
-            await marketService.createMarket({ marketName });
+            await marketService.createMarket(marketName);
             await fetchMarkets();
             setSuccess("Mercado criado com sucesso!");
         } catch (error) {
@@ -46,7 +46,7 @@ const useMarketService = () => {
         clearMessages();
 
         try {
-            await marketService.updateMarket(marketId, { marketName });
+            await marketService.updateMarket(marketId, marketName);
             await fetchMarkets();
             setSuccess("Mercado atualizado com sucesso!");
         } catch (error) {

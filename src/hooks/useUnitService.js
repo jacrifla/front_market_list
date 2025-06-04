@@ -31,7 +31,7 @@ const useUnitService = () => {
         clearMessages();
 
         try {
-            await unitService.createUnit({ unitName });
+            await unitService.createUnit(unitName);
             await fetchUnits();
             setSuccess("Unidade criada com sucesso!");
         } catch (error) {
@@ -46,7 +46,7 @@ const useUnitService = () => {
         clearMessages();
 
         try {
-            await unitService.updateUnit(unitId, { unitName });
+            await unitService.updateUnit(unitId, unitName);
             await fetchUnits();
             setSuccess("Unidade atualizada com sucesso!");
         } catch (error) {
