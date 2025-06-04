@@ -10,6 +10,7 @@ export default function ConfirmModal({
   confirmText = 'Confirmar',
   cancelText = 'Cancelar',
   extraButton,
+  confirmLoading = false, // só essa adição aqui
 }) {
   return (
     <Modal show={show} onHide={onHide} centered>
@@ -23,7 +24,12 @@ export default function ConfirmModal({
       <Modal.Body className="pt-2 fs-6 text-secondary">{body}</Modal.Body>
 
       <Modal.Footer className="border-0 pt-0">
-        <Button variant="outline-secondary" onClick={onHide} className='flex-fill'>
+        <Button
+          variant="outline-secondary"
+          onClick={onHide}
+          className="flex-fill"
+          disabled={confirmLoading}
+        >
           {cancelText}
         </Button>
 
@@ -31,14 +37,20 @@ export default function ConfirmModal({
           <Button
             variant={extraButton.variant || 'info'}
             onClick={extraButton.onClick}
-            className='flex-fill'
+            className="flex-fill"
+            disabled={confirmLoading}
           >
             {extraButton.label}
           </Button>
         )}
 
-        <Button variant="danger" onClick={onConfirm} className='flex-fill'>
-          {confirmText}
+        <Button
+          variant="danger"
+          onClick={onConfirm}
+          className="flex-fill"
+          disabled={confirmLoading}
+        >
+          {confirmLoading ? 'Processando...' : confirmText}
         </Button>
       </Modal.Footer>
     </Modal>
