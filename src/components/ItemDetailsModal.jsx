@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Spinner } from 'react-bootstrap';
 
 export default function ItemDetailsModal({
   show,
@@ -19,6 +19,8 @@ export default function ItemDetailsModal({
     marketId: '',
   });
 
+  const [isSaving, setIsSaving] = useState(false);
+
   useEffect(() => {
     if (show) {
       setFormData({
@@ -28,6 +30,7 @@ export default function ItemDetailsModal({
         barcode: '',
         marketId: '',
       });
+      setIsSaving(false);
     }
   }, [show]);
 
@@ -36,17 +39,25 @@ export default function ItemDetailsModal({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => {
-    onSave({
-      ...formData,
-      brandId: formData.brandId || null,
-      categoryId: formData.categoryId || null,
-      unitId: formData.unitId || null,
-      barcode: formData.barcode || null,
-      marketId: formData.marketId || null,
-    });
+  const handleSubmit = async () => {
+    setIsSaving(true);
+    try {
+      await onSave({
+        ...formData,
+        brandId: formData.brandId || null,
+        categoryId: formData.categoryId || null,
+        unitId: formData.unitId || null,
+        barcode: formData.barcode || null,
+        marketId: formData.marketId || null,
+      });
+      onHide();
+    } catch (err) {
+      console.error('Erro ao salvar item:', err);
+    } finally {
+      setIsSaving(false);
+    }
   };
-  
+
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
@@ -145,11 +156,24 @@ export default function ItemDetailsModal({
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="secondary" onClick={onHide}>
+        <Button variant="secondary" onClick={onHide} disabled={isSaving}>
           Cancelar
         </Button>
-        <Button variant="success" onClick={handleSubmit}>
-          Salvar
+        <Button variant="success" onClick={handleSubmit} disabled={isSaving}>
+          {isSaving ? (
+            <>
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />{' '}
+              Salvando...
+            </>
+          ) : (
+            'Salvar'
+          )}
         </Button>
       </Modal.Footer>
     </Modal>
