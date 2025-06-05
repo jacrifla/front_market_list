@@ -13,6 +13,7 @@ import ConfirmModal from '../components/ConfirmModal';
 import ItemDetailsModal from '../components/ItemDetailsModal';
 import PurchaseDateModal from '../components/PurchaseDateModal';
 import useToastMessage from '../hooks/useToastMessage';
+import React from 'react';
 
 export default function Home() {
   const {
@@ -113,24 +114,24 @@ export default function Home() {
         {selectedListId ? (
           <>
             {listItems.map((item, index) => (
-              <ItemCard
-                key={item.itemListId}
-                item={item}
-                index={index}
-                selectedItem={selectedItem}
-                onSelect={setSelectedItem}
-              />
+              <React.Fragment key={item.itemListId}>
+                <ItemCard
+                  item={item}
+                  index={index}
+                  selectedItem={selectedItem}
+                  onSelect={setSelectedItem}
+                />
+                {selectedItem?.itemListId === item.itemListId && (
+                  <SelectedItemDetails
+                    item={selectedItem}
+                    onClose={() => setSelectedItem(null)}
+                    onMark={() => handleCheckItem(selectedItem)}
+                    onEdit={openEditItemModal}
+                    onDelete={handleDeleteItem}
+                  />
+                )}
+              </React.Fragment>
             ))}
-
-            {selectedItem && (
-              <SelectedItemDetails
-                item={selectedItem}
-                onClose={() => setSelectedItem(null)}
-                onMark={() => handleCheckItem(selectedItem)}
-                onEdit={openEditItemModal}
-                onDelete={handleDeleteItem}
-              />
-            )}
 
             <FloatingAddButton onClick={openAddItemModal} />
           </>
