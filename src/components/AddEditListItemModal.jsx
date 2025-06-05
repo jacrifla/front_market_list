@@ -35,10 +35,10 @@ export default function AddEditListItemModal({
               autoComplete="off"
               aria-autocomplete="list"
               aria-haspopup="true"
-              aria-expanded={suggestions.length > 0}
+              aria-expanded={Array.isArray(suggestions) && suggestions.length > 0}
               disabled={formData.itemType === 'common'}
             />
-            {suggestions.length > 0 && (
+            {Array.isArray(suggestions) && suggestions.length > 0 && (
               <div
                 style={{
                   position: 'absolute',

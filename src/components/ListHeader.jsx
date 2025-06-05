@@ -7,7 +7,7 @@ export default function ListHeader({ listName, total }) {
       </h4>
       <span className="fs-5 text-primary d-flex align-items-center gap-2">
         <i className="bi bi-receipt"></i>
-        R$ {total.toFixed(2)}
+        R$ {total !== undefined ? total.toFixed(2) : '0.00'}
       </span>
     </div>
   );
