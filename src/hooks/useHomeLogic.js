@@ -56,6 +56,7 @@ const useHomeLogic = () => {
         markListCompleted,
         success: listSuccess,
         error: listError,
+        loadingList,
     } = useListService(userId);
 
     const {
@@ -438,6 +439,7 @@ const useHomeLogic = () => {
         isConfirmDeleteModalOpen,
         handleConfirmDelete,
         handleCancelDelete,
+        loadingList,
     };
 };
 

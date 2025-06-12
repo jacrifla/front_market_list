@@ -76,6 +76,7 @@ export default function Home() {
     handleCancelDelete,
     handleConfirmDelete,
     handleCompleteList,
+    loadingList
   } = useHomeLogic();
 
   useToastMessage(null, errorList);
@@ -104,6 +105,7 @@ export default function Home() {
         onShareList={handleShareList}
         show={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
+        loadingList={loadingList}
       />
 
       <main className="pt-4 px-3">

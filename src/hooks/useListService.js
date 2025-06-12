@@ -105,7 +105,7 @@ const useListService = (userId) => {
 
     return {
         lists,
-        loading,
+        loadingList: loading,
         error,
         fetchLists,
         createList,

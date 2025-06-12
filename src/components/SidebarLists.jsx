@@ -11,6 +11,7 @@ export default function SidebarLists({
   onShareList,
   show,
   onClose,
+  loadingList,
 }) {
   useEffect(() => {
     if (show) {
@@ -45,8 +46,16 @@ export default function SidebarLists({
               className="btn btn-outline-primary btn-sm"
               onClick={onAddList}
               title="Nova Lista"
+              disabled={loadingList}
             >
-              <i className="bi bi-plus-lg"></i>
+              {loadingList ? (
+                <span
+                  className="spinner-border spinner-border-sm"
+                  role="status"
+                />
+              ) : (
+                <i className="bi bi-plus-lg"></i>
+              )}
             </button>
             <button
               className="btn btn-outline-secondary btn-sm"
@@ -58,14 +67,22 @@ export default function SidebarLists({
           </div>
         </div>
 
-        <div className="list-items px-3 py-2 overflow-auto" style={{ maxHeight: 'calc(100vh - 60px)' }}>
+        <div
+          className="list-items px-3 py-2 overflow-auto"
+          style={{ maxHeight: 'calc(100vh - 60px)' }}
+        >
           {lists.map((list) => {
             const isSelected = list.listId === selectedListId;
             return (
               <div
                 key={list.listId}
-               className={`list-item btn w-100 mb-3 text-start ${isSelected ? 'active' : ''} ${list.completedAt ? 'bg-success bg-opacity-25 border-success' : 'btn-light'}`}
-
+                className={`list-item btn w-100 mb-3 text-start ${
+                  isSelected ? 'active' : ''
+                } ${
+                  list.completedAt
+                    ? 'bg-success bg-opacity-25 border-success'
+                    : 'btn-light'
+                }`}
                 style={{ padding: '0.75rem' }}
               >
                 {/* Nome e Data lado a lado */}
@@ -77,7 +94,11 @@ export default function SidebarLists({
                     onClose();
                   }}
                 >
-                  <strong className="text-truncate me-3" title={list.listName} style={{ flex: 1 }}>
+                  <strong
+                    className="text-truncate me-3"
+                    title={list.listName}
+                    style={{ flex: 1 }}
+                  >
                     {list.listName}
                   </strong>
                   <small className="text-muted flex-shrink-0">
@@ -86,14 +107,25 @@ export default function SidebarLists({
                 </div>
 
                 {/* Botões em linha ocupando toda largura, abaixo */}
-                <div className="btn-group btn-group-sm mt-2 w-100" onClick={(e) => e.stopPropagation()}>
+                <div
+                  className="btn-group btn-group-sm mt-2 w-100"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <button
                     className="btn btn-outline-success flex-fill"
-                    title={list.completedAt ? "Já comprada" : "Marcar como comprada"}
+                    title={
+                      list.completedAt ? 'Já comprada' : 'Marcar como comprada'
+                    }
                     onClick={() => onMarkPurchased(list.listId)}
                     disabled={!!list.completedAt}
                   >
-                     <i className={`bi ${list.completedAt ? 'bi-check-circle-fill' : 'bi-check2-square'}`}></i>
+                    <i
+                      className={`bi ${
+                        list.completedAt
+                          ? 'bi-check-circle-fill'
+                          : 'bi-check2-square'
+                      }`}
+                    ></i>
                   </button>
                   <button
                     className="btn btn-outline-warning flex-fill"
