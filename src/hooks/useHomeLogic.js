@@ -66,7 +66,7 @@ const useHomeLogic = () => {
 
     const {
         listItems,
-        loading,
+        loadingListItem,
         error: itemError,
         success: itemSuccess,
         fetchItemsByListId,
@@ -378,7 +378,7 @@ const useHomeLogic = () => {
         isSidebarOpen,
         lists,
         listItems,
-        loading,
+        loadingListItem,
         errorList: listError,
         errorItem: itemError,
         total,

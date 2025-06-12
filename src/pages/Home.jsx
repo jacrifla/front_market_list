@@ -76,7 +76,8 @@ export default function Home() {
     handleCancelDelete,
     handleConfirmDelete,
     handleCompleteList,
-    loadingList
+    loadingList,
+    loadingListItem,
   } = useHomeLogic();
 
   useToastMessage(null, errorList);
@@ -164,6 +165,7 @@ export default function Home() {
         suggestions={suggestions}
         onItemNameChange={handleItemNameChange}
         onSelectSuggestion={handleSelectSuggestion}
+        loadingListItem={loadingListItem}
       />
 
       <ShareListModal

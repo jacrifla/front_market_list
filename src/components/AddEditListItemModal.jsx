@@ -11,6 +11,7 @@ export default function AddEditListItemModal({
   suggestions,
   onItemNameChange,
   onSelectSuggestion,
+  loadingListItem,
 }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -101,7 +102,7 @@ export default function AddEditListItemModal({
         <Button variant="secondary" onClick={onHide}>
           Cancelar
         </Button>
-        <Button variant="primary" onClick={onConfirm} disabled={!formData.itemName || formData.quantity <= 0}>
+        <Button variant="primary" onClick={onConfirm} disabled={!formData.itemName || formData.quantity <= 0 || loadingListItem}>
           Salvar
         </Button>
       </Modal.Footer>
