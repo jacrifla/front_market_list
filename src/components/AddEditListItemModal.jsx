@@ -1,4 +1,3 @@
-import React from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 
 export default function AddEditListItemModal({
@@ -40,28 +39,12 @@ export default function AddEditListItemModal({
               disabled={formData.itemType === 'common'}
             />
             {Array.isArray(suggestions) && suggestions.length > 0 && (
-              <div
-                style={{
-                  position: 'absolute',
-                  zIndex: 1000,
-                  backgroundColor: 'white',
-                  border: '1px solid #ccc',
-                  width: '100%',
-                  maxHeight: '150px',
-                  overflowY: 'auto',
-                  borderRadius: '0.375rem',
-                  boxShadow: '0 0.5rem 1rem rgba(0, 0, 0, 0.1)',
-                }}
-              >
+              <div className="autocomplete-suggestions">
                 {suggestions.map((sug, idx) => (
                   <div
                     key={idx}
+                    className={`autocomplete-suggestion`}
                     onClick={() => onSelectSuggestion(sug)}
-                    style={{
-                      padding: '8px 12px',
-                      cursor: 'pointer',
-                      borderBottom: '1px solid #eee',
-                    }}
                     onMouseOver={(e) =>
                       (e.currentTarget.style.backgroundColor = '#f8f9fa')
                     }
@@ -102,7 +85,13 @@ export default function AddEditListItemModal({
         <Button variant="secondary" onClick={onHide}>
           Cancelar
         </Button>
-        <Button variant="primary" onClick={onConfirm} disabled={!formData.itemName || formData.quantity <= 0 || loadingListItem}>
+        <Button
+          variant="primary"
+          onClick={onConfirm}
+          disabled={
+            !formData.itemName || formData.quantity <= 0 || loadingListItem
+          }
+        >
           Salvar
         </Button>
       </Modal.Footer>
