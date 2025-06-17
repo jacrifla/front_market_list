@@ -77,9 +77,9 @@ const useMarketService = () => {
 
     return {
         markets,
-        loading,
-        error,
-        success,
+        loadingMarket :loading,
+        errorMarket :error,
+        successMarket :success,
         fetchMarkets,
         createMarket,
         updateMarket,

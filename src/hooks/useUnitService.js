@@ -77,9 +77,9 @@ const useUnitService = () => {
 
     return {
         units,
-        loading,
-        error,
-        success,
+        loadingUnit :loading,
+        errorUnit :error,
+        successUnit :success,
         fetchUnits,
         createUnit,
         updateUnit,

@@ -77,9 +77,9 @@ const useCategoryService = () => {
 
     return {
         categories,
-        loading,
-        error,
-        success,
+        loadingCategory :loading,
+        errorCategory :error,
+        successCategory :success,
         fetchCategorys,
         createCategory,
         updateCategory,

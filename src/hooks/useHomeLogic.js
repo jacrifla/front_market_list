@@ -58,21 +58,24 @@ const useHomeLogic = () => {
         updateList,
         deleteList,
         markListCompleted,
-        success: listSuccess,
-        error: listError,
+        successList,
+        errorList,
         loadingList,
     } = useListService(userId);
 
     const {
         searchItemByBarcodeOrName,
-        items: itemSuggestions
+        items: itemSuggestions,
+        loadingItem,
+        errorItem,
+        successItem,
     } = useItemService();
 
     const {
         listItems,
         loadingListItem,
-        error: itemError,
-        success: itemSuccess,
+        errorListItem,
+        successListItem,
         fetchItemsByListId,
         markItemAsBought,
         addListItem,

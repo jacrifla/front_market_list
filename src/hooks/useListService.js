@@ -106,13 +106,13 @@ const useListService = (userId) => {
     return {
         lists,
         loadingList: loading,
-        error,
+        errorList :error,
+        successList :success,
         fetchLists,
         createList,
         updateList,
         deleteList,
         markListCompleted,
-        success
     }
 };
 

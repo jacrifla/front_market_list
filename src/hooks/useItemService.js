@@ -107,9 +107,9 @@ const useItemService = () => {
     return {
         items,
         selectedItem,
-        loading,
-        error,
-        success,
+        loadingItem :loading,
+        errorItem :error,
+        successItem :success,
         fetchAllItems,
         fetchItemById,
         searchItemByBarcodeOrName,

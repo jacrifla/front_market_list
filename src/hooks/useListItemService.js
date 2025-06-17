@@ -89,8 +89,8 @@ const useListItemService = () => {
     return {
         listItems,
         loadingListItem: loading,
-        error,
-        success,
+        errorListItem: error,
+        successListItem: success,
         fetchItemsByListId,
         addListItem,
         updateListItem,

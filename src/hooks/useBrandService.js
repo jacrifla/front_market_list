@@ -77,9 +77,9 @@ const useBrandService = () => {
 
     return {
         brands,
-        loading,
-        error,
-        success,
+        loadingBrand :loading,
+        errorBrand :error,
+        successBrand :success,
         fetchBrands,
         createBrand,
         updateBrand,
