@@ -37,6 +37,10 @@ const useHomeLogic = () => {
     const [isConfirmSaveModalOpen, setIsConfirmSaveModalOpen] = useState(false);
     const [isSaveItemModalOpen, setIsSaveItemModalOpen] = useState(false);
 
+    const [showPurchaseDateModal, setShowPurchaseDateModal] = useState(false);
+    const [pendingListIdToComplete, setPendingListIdToComplete] = useState(null);
+    const [showCompleteListConfirmModal, setShowCompleteListConfirmModal] = useState(false);
+
     const [isItemModalOpen, setIsItemModalOpen] = useState(false);
     const [itemModalMode, setItemModalMode] = useState('add');
     const [itemFormData, setItemFormData] = useState({
@@ -179,6 +183,7 @@ const useHomeLogic = () => {
         setIsModalOpen(false);
     };
 
+    // Excluir Lista
     const handleDeleteList = async (listId) => {
         await deleteList(listId);
         if (selectedListId === listId) {
@@ -188,6 +193,7 @@ const useHomeLogic = () => {
         }
     };
 
+    // Compartilhar a lista
     const handleShareList = async (listId) => {
         try {
             const token = await generateShareToken(listId);
@@ -203,7 +209,67 @@ const useHomeLogic = () => {
         }
     };
 
+    const handleStartCompleteList = (listId) => {
+        setPendingListIdToComplete(listId);
+        setShowPurchaseDateModal(true);
+    };
+
+    const handleConfirmPurchaseDate = (date) => {
+        setPurchaseDateByListId((prev) => ({
+            ...prev,
+            [pendingListIdToComplete]: date,
+        }));
+        setShowPurchaseDateModal(false);
+        setShowCompleteListConfirmModal(true);
+    };
+
+    const handleConfirmOnlyList = async () => {
+        if (!pendingListIdToComplete) return;
+
+        await handleCompleteList(pendingListIdToComplete);
+        setShowCompleteListConfirmModal(false);
+        setPendingListIdToComplete(null);
+    };
+
+    const handleConfirmWithItems = async () => {
+        const listId = pendingListIdToComplete;
+        const date = purchaseDateByListId[listId];
+
+        const unmarkedItems = listItems.filter(
+            (item) => item.listId === listId && !item.bought
+        );
+
+        await Promise.all(
+            unmarkedItems.map(item =>
+                markItemAsBought({
+                    userId,
+                    itemId: item.itemId,
+                    listId: item.listId,
+                    itemListId: item.itemListId,
+                    categoryId: null,
+                    brandId: null,
+                    unitId: null,
+                    marketId: null,
+                    barcode: null,
+                    purchaseDate: date,
+                })
+            )
+        );
+
+
+        await handleCompleteList(listId);
+        setShowCompleteListConfirmModal(false);
+        setPendingListIdToComplete(null);
+    };
+
     const handleCompleteList = async (listId) => {
+        const totalForList = listItems
+            .filter(item => item.listId === listId)
+            .reduce((acc, item) => acc + item.quantity * item.price, 0);
+
+        if (totalForList <= 0) {
+            throw new Error('O total da lista deve ser um número válido e maior que zero, tente selecionar a lista, ou adicionar algum item nela');
+        }
         await markListCompleted({
             listId,
             userId,
@@ -214,6 +280,7 @@ const useHomeLogic = () => {
         setIsConfirmDeleteModalOpen(true);
     };
 
+    // Confirmacao de Exclusao
     const handleConfirmDelete = async () => {
         if (selectedListId) {
             await handleDeleteList(selectedListId);
@@ -222,6 +289,7 @@ const useHomeLogic = () => {
         }
     };
 
+    // Cancelamento da exclusao
     const handleCancelDelete = () => {
         setSelectedListId(null);
         setIsConfirmDeleteModalOpen(false);
@@ -364,6 +432,7 @@ const useHomeLogic = () => {
         handleCancel();
     };
 
+    // Deletar item
     const handleDeleteItem = async () => {
         if (!selectedItem) return;
         await deleteListItem(selectedItem.itemListId, selectedListId);
@@ -440,6 +509,16 @@ const useHomeLogic = () => {
         handleConfirmDelete,
         handleCancelDelete,
         loadingList,
+
+        handleStartCompleteList,
+
+        showPurchaseDateModal,
+        setShowPurchaseDateModal,
+        handleConfirmPurchaseDate,
+        showCompleteListConfirmModal,
+        setShowCompleteListConfirmModal,
+        handleConfirmWithItems,
+        handleConfirmOnlyList,
     };
 };
 

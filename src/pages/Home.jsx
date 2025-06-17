@@ -72,12 +72,18 @@ export default function Home() {
     setIsPurchaseDateModalOpen,
     setPendingMarkAsBought,
     handleCheckItem,
-    isConfirmDeleteModalOpen,
-    handleCancelDelete,
-    handleConfirmDelete,
-    handleCompleteList,
     loadingList,
     loadingListItem,
+
+    handleStartCompleteList,
+
+    showPurchaseDateModal,
+    setShowPurchaseDateModal,
+    handleConfirmPurchaseDate,
+    showCompleteListConfirmModal,
+    setShowCompleteListConfirmModal,
+    handleConfirmWithItems,
+    handleConfirmOnlyList,
   } = useHomeLogic();
 
   useToastMessage(null, errorList);
@@ -100,7 +106,7 @@ export default function Home() {
         selectedListId={selectedListId}
         onSelectList={handleSelectList}
         onAddList={handleAddList}
-        onMarkPurchased={handleCompleteList}
+        onMarkPurchased={handleStartCompleteList}
         onEditList={handleEditList}
         onDeleteList={handleDeleteList}
         onShareList={handleShareList}
@@ -189,16 +195,6 @@ export default function Home() {
         body="Deseja salvar os dados do item? Caso não, enviaremos os campos como nulos."
       />
 
-      <ConfirmModal
-        show={isConfirmDeleteModalOpen}
-        onHide={handleCancelDelete}
-        onConfirm={handleConfirmDelete}
-        title="Deseja excluir a lista?"
-        body="A lista foi marcada como comprada. Deseja excluí-la permanentemente?"
-        confirmText="Sim, excluir"
-        cancelText="Não"
-      />
-
       <ItemDetailsModal
         show={isSaveItemModalOpen}
         onHide={handleCancel}
@@ -217,6 +213,27 @@ export default function Home() {
           setPendingMarkAsBought(null);
         }}
         onConfirm={handlePurchaseDateSelected}
+      />
+
+      <PurchaseDateModal
+        show={showPurchaseDateModal}
+        onClose={() => setShowPurchaseDateModal(false)}
+        onConfirm={handleConfirmPurchaseDate}
+      />
+
+      <ConfirmModal
+        show={showCompleteListConfirmModal}
+        onHide={() => setShowCompleteListConfirmModal(false)}
+        title="Marcar lista como comprada"
+        body="Deseja marcar todos os itens como comprados também?"
+        cancelText="Cancelar"
+        confirmText="Lista e Itens"
+        onConfirm={handleConfirmWithItems}
+        extraButton={{
+          label: 'Somente a lista',
+          variant: 'outline-primary',
+          onClick: handleConfirmOnlyList,
+        }}
       />
     </div>
   );

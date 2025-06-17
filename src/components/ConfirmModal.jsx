@@ -10,7 +10,7 @@ export default function ConfirmModal({
   confirmText = 'Confirmar',
   cancelText = 'Cancelar',
   extraButton,
-  confirmLoading = false, // só essa adição aqui
+  confirmLoading = false,
 }) {
   return (
     <Modal show={show} onHide={onHide} centered>
