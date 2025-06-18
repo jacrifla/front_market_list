@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { Button, ListGroup, ButtonGroup } from 'react-bootstrap';
+import { Offcanvas, Button, ListGroup, ButtonGroup } from 'react-bootstrap';
 
 export default function SidebarLists({
   lists,
@@ -14,76 +13,40 @@ export default function SidebarLists({
   onClose,
   loadingList,
 }) {
-  useEffect(() => {
-    document.body.style.overflow = show ? 'hidden' : '';
-  }, [show]);
-
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString('pt-BR');
   };
 
   return (
-    <>
-      {/* Overlay */}
-      <div
-        className={`sidebar-overlay ${show ? 'show' : ''}`}
-        onClick={onClose}
-        style={{
-          position: 'fixed',
-          inset: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.3)',
-          zIndex: 1040,
-          display: show ? 'block' : 'none',
-        }}
-      />
-
-      {/* Sidebar */}
-      <div
-        className={`sidebar-container ${show ? 'open' : ''}`}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: show ? 0 : '-320px',
-          width: '320px',
-          height: '100vh',
-          backgroundColor: '#fff',
-          boxShadow: '2px 0 5px rgba(0,0,0,0.3)',
-          transition: 'left 0.3s ease',
-          zIndex: 1050,
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <div className="sidebar-header d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
-          <div className="d-flex align-items-center gap-2">
-            <i className="bi bi-list-task fs-4 text-primary"></i>
-            <h5 className="mb-0">Minhas Listas</h5>
-          </div>
-          <div className="d-flex gap-2">
-            <Button
-              variant="outline-primary"
-              size="sm"
-              onClick={onAddList}
-              title="Nova Lista"
-              disabled={loadingList}
-            >
-              <i className="bi bi-plus-lg"></i>
-            </Button>
-            <Button
-              variant="outline-secondary"
-              size="sm"
-              onClick={onClose}
-              title="Fechar"
-            >
-              <i className="bi bi-x-lg"></i>
-            </Button>
-          </div>
+    <Offcanvas
+      show={show}
+      onHide={onClose}
+      placement="start"
+      backdrop="static"
+      scroll
+    >
+      <Offcanvas.Header closeButton>
+        <div className="d-flex align-items-center gap-2">
+          <i className="bi bi-list-task fs-4 text-primary"></i>
+          <Offcanvas.Title className="mb-0">Minhas Listas</Offcanvas.Title>
         </div>
+        <Button
+          variant="outline-primary"
+          size="sm"
+          onClick={onAddList}
+          title="Nova Lista"
+          disabled={loadingList}
+          className="ms-2"
+        >
+          <i className="bi bi-plus-lg"></i>
+        </Button>
+      </Offcanvas.Header>
 
+      <Offcanvas.Body className="px-3 py-2">
         <ListGroup
-          className="flex-grow-1 px-3 py-2 overflow-auto"
-          style={{ maxHeight: 'calc(100vh - 60px)' }}
+          className="overflow-auto"
+          style={{ maxHeight: 'calc(100vh - 160px)' }}
         >
           {lists.map((list) => {
             const isSelected = list.listId === selectedListId;
@@ -93,9 +56,8 @@ export default function SidebarLists({
               <ListGroup.Item
                 key={list.listId}
                 as="div"
-                active={isSelected}
                 variant={isCompleted ? 'success' : undefined}
-                className="mb-3"
+                className={`mb-3 ${isSelected ? 'list-item-selected' : ''}`}
                 style={{ padding: '0.75rem', cursor: 'pointer' }}
                 onClick={() => {
                   onSelectList(list.listId);
@@ -164,7 +126,7 @@ export default function SidebarLists({
             );
           })}
         </ListGroup>
-      </div>
-    </>
+      </Offcanvas.Body>
+    </Offcanvas>
   );
 }
