@@ -1,3 +1,5 @@
+import { Form } from 'react-bootstrap';
+
 export default function SelectField({
   label,
   value,
@@ -6,24 +8,19 @@ export default function SelectField({
   name,
   getOptionValue = (opt) => String(opt.id),
   getOptionLabel = (opt) => opt.name,
-  defaultOption = "Selecione",
+  defaultOption = 'Selecione',
 }) {
   return (
-    <div>
-      <label className="form-label">{label}</label>
-      <select
-        className="form-select"
-        value={value}
-        onChange={onChange}
-        name={name}
-      >
+    <Form.Group className="mb-3">
+      <Form.Label>{label}</Form.Label>
+      <Form.Select value={value} onChange={onChange} name={name}>
         <option value="">{defaultOption}</option>
         {options?.map((opt) => (
           <option key={getOptionValue(opt)} value={getOptionValue(opt)}>
             {getOptionLabel(opt)}
           </option>
         ))}
-      </select>
-    </div>
+      </Form.Select>
+    </Form.Group>
   );
 }

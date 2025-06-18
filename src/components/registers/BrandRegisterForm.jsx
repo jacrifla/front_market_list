@@ -1,38 +1,38 @@
 import { useEffect, useState } from 'react';
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, Form } from 'react-bootstrap';
 import useBrandService from '../../hooks/useBrandService';
 import useToastMessage from '../../hooks/useToastMessage';
 import ConfirmModal from '../ConfirmModal';
 
 export default function BrandRegisterForm() {
-    const { showToast } = useToastMessage();
+  const { showToast } = useToastMessage();
   const {
     createBrand,
     updateBrand,
     deleteBrand,
     fetchBrands,
     brands,
-    success,
-    error,
-    loading,
+    successBrand,
+    errorBrand,
+    loadingBrand,
   } = useBrandService();
 
   const [brandName, setBrandName] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  useToastMessage(success, error);
+  useToastMessage(successBrand, errorBrand);
 
   useEffect(() => {
     fetchBrands();
   }, [fetchBrands]);
 
   useEffect(() => {
-    if (success) {
+    if (successBrand) {
       setBrandName('');
       setEditingId(null);
     }
-  }, [success]);
+  }, [successBrand]);
 
   const handleSelectChange = (e) => {
     const id = e.target.value;
@@ -55,7 +55,7 @@ export default function BrandRegisterForm() {
     e.preventDefault();
 
     if (!brandName.trim()) {
-      showToast('O nome da marca é obrigatório', 'error');
+      showToast('O nome da marca é obrigatório', 'errorBrand');
       return;
     }
 
@@ -90,20 +90,19 @@ export default function BrandRegisterForm() {
               variant="outline-danger"
               size="sm"
               onClick={() => setShowConfirmModal(true)}
-              disabled={loading}
+              disabled={loadingBrand}
             >
               <i className="bi bi-trash"></i>
             </Button>
           )}
         </div>
 
-        <div className="mb-3">
-          <label className="form-label">Selecionar Marca para Editar</label>
-          <select
-            className="form-select"
+        <Form.Group className="mb-3">
+          <Form.Label>Selecionar Marca para Editar</Form.Label>
+          <Form.Select
             value={editingId || ''}
             onChange={handleSelectChange}
-            disabled={loading}
+            disabled={loadingBrand}
           >
             <option value="">-- Nova Marca --</option>
             {brands?.map((b) => (
@@ -111,20 +110,19 @@ export default function BrandRegisterForm() {
                 {b.brandName}
               </option>
             ))}
-          </select>
-        </div>
+          </Form.Select>
+        </Form.Group>
 
         <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label className="form-label">Nome da Marca</label>
-            <input
+          <Form.Group className="mb-3">
+            <Form.Label>Nome da Marca</Form.Label>
+            <Form.Control
               type="text"
-              className="form-control"
               value={brandName}
               onChange={(e) => setBrandName(e.target.value)}
               required
             />
-          </div>
+          </Form.Group>
 
           <div className="d-flex justify-content-end gap-2">
             {editingId && (
@@ -132,8 +130,8 @@ export default function BrandRegisterForm() {
                 Cancelar
               </Button>
             )}
-            <Button type="submit" variant="success" disabled={loading}>
-              {loading
+            <Button type="submit" variant="successBrand" disabled={loadingBrand}>
+              {loadingBrand
                 ? editingId
                   ? 'Atualizando...'
                   : 'Salvando...'
@@ -147,11 +145,11 @@ export default function BrandRegisterForm() {
 
       <ConfirmModal
         show={showConfirmModal}
-        onHide={() => !loading && setShowConfirmModal(false)}
+        onHide={() => !loadingBrand && setShowConfirmModal(false)}
         onConfirm={confirmDelete}
         title="Excluir Marca"
         body="Tem certeza que deseja excluir esta marca? Esta ação não poderá ser desfeita."
-        confirmText={loading ? 'Excluindo...' : 'Excluir'}
+        confirmText={loadingBrand ? 'Excluindo...' : 'Excluir'}
         cancelText="Cancelar"
       />
     </>

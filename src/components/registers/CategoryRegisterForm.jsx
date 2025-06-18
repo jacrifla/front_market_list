@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, Form } from 'react-bootstrap';
 import useCategoryService from '../../hooks/useCategoryService';
 import useToastMessage from '../../hooks/useToastMessage';
 import ConfirmModal from '../ConfirmModal';
@@ -10,10 +10,10 @@ export default function CategoryRegisterForm() {
     updateCategory,
     deleteCategory,
     fetchCategorys,
-    loading,
+    loadingCategory,
     categories,
-    success,
-    error,
+    successCategory,
+    errorCategory,
   } = useCategoryService();
 
   const [categoryName, setCategoryName] = useState('');
@@ -21,19 +21,19 @@ export default function CategoryRegisterForm() {
   const [editingId, setEditingId] = useState(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  useToastMessage(success, error);
+  useToastMessage(successCategory, errorCategory);
 
   useEffect(() => {
     fetchCategorys();
   }, [fetchCategorys]);
 
   useEffect(() => {
-    if (success) {
+    if (successCategory) {
       setCategoryName('');
       setDescription('');
       setEditingId(null);
     }
-  }, [success]);
+  }, [successCategory]);
 
   const handleSelectChange = (e) => {
     const id = e.target.value;
@@ -100,19 +100,19 @@ export default function CategoryRegisterForm() {
               variant="outline-danger"
               size="sm"
               onClick={() => setShowConfirmModal(true)}
-              disabled={loading}
+              disabled={loadingCategory}
             >
               <i className="bi bi-trash"></i>
             </Button>
           )}
         </div>
 
-        <div className="mb-3">
-          <label className="form-label">Selecionar Categoria para Editar</label>
-          <select
-            className="form-select"
+        <Form.Group className="mb-3">
+          <Form.Label>Selecionar Categoria para Editar</Form.Label>
+          <Form.Select
             value={editingId || ''}
             onChange={handleSelectChange}
+            disabled={loadingCategory}
           >
             <option value="">-- Nova Categoria --</option>
             {categories?.map((cat) => (
@@ -120,30 +120,29 @@ export default function CategoryRegisterForm() {
                 {cat.categoryName}
               </option>
             ))}
-          </select>
-        </div>
+          </Form.Select>
+        </Form.Group>
 
         <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label className="form-label">Nome da Categoria</label>
-            <input
+          <Form.Group className="mb-3">
+            <Form.Label className="form-label">Nome da Categoria</Form.Label>
+            <Form.Control
               type="text"
-              className="form-control"
               value={categoryName}
               onChange={(e) => setCategoryName(e.target.value)}
               required
             />
-          </div>
+          </Form.Group>
 
-          <div className="mb-3">
-            <label className="form-label">Descrição (opcional)</label>
-            <textarea
-              className="form-control"
+          <Form.Group className="mb-3">
+            <Form.Label className="form-label">Descrição (opcional)</Form.Label>
+            <Form.Control
+              as={'textarea'}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={1}
             />
-          </div>
+          </Form.Group>
 
           <div className="d-flex justify-content-end gap-2">
             {editingId && (
@@ -151,7 +150,7 @@ export default function CategoryRegisterForm() {
                 Cancelar
               </Button>
             )}
-            <Button type="submit" variant="success">
+            <Button type="submit" variant="successCategory">
               {editingId ? 'Atualizar' : 'Salvar'}
             </Button>
           </div>
@@ -159,11 +158,11 @@ export default function CategoryRegisterForm() {
       </Card>
       <ConfirmModal
         show={showConfirmModal}
-        onHide={() => !loading && setShowConfirmModal(false)}
+        onHide={() => !loadingCategory && setShowConfirmModal(false)}
         onConfirm={confirmDelete}
         title="Excluir Categoria"
         body="Tem certeza que deseja excluir esta categoria? Esta ação não poderá ser desfeita."
-        confirmText={loading ? 'Excluindo...' : 'Excluir'}
+        confirmText={loadingCategory ? 'Excluindo...' : 'Excluir'}
         cancelText="Cancelar"
       />
     </>

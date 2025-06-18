@@ -1,38 +1,38 @@
 import { useEffect, useState } from 'react';
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, Form, Row, Col } from 'react-bootstrap';
 import useMarketService from '../../hooks/useMarketService';
 import useToastMessage from '../../hooks/useToastMessage';
 import ConfirmModal from '../ConfirmModal';
 
 export default function MarketRegisterForm() {
-    const { showToast } = useToastMessage();
+  const { showToast } = useToastMessage();
   const {
     createMarket,
     updateMarket,
     deleteMarket,
     fetchMarkets,
     markets,
-    success,
-    error,
-    loading,
+    successMarket,
+    errorMarket,
+    loadingMarket,
   } = useMarketService();
 
   const [marketName, setMarketName] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  useToastMessage(success, error);
+  useToastMessage(successMarket, errorMarket);
 
   useEffect(() => {
     fetchMarkets();
   }, [fetchMarkets]);
 
   useEffect(() => {
-    if (success) {
+    if (successMarket) {
       setMarketName('');
       setEditingId(null);
     }
-  }, [success]);
+  }, [successMarket]);
 
   const handleSelectChange = (e) => {
     const id = e.target.value;
@@ -55,7 +55,7 @@ export default function MarketRegisterForm() {
     e.preventDefault();
 
     if (!marketName.trim()) {
-      showToast('O nome da marca é obrigatório', 'error');
+      showToast('O nome do mercado é obrigatório', 'errorMarket');
       return;
     }
 
@@ -90,41 +90,40 @@ export default function MarketRegisterForm() {
               variant="outline-danger"
               size="sm"
               onClick={() => setShowConfirmModal(true)}
-              disabled={loading}
+              disabled={loadingMarket}
             >
               <i className="bi bi-trash"></i>
             </Button>
           )}
         </div>
 
-        <div className="mb-3">
-          <label className="form-label">Selecionar Mercado para Editar</label>
-          <select
-            className="form-select"
-            value={editingId || ''}
-            onChange={handleSelectChange}
-            disabled={loading}
-          >
-            <option value="">-- Nova Mercado --</option>
-            {markets?.map((b) => (
-              <option key={b.marketId} value={b.marketId}>
-                {b.marketName}
-              </option>
-            ))}
-          </select>
-        </div>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group className="mb-3">
+            <Form.Label>Selecionar Mercado para Editar</Form.Label>
+            <Form.Select
+              value={editingId || ''}
+              onChange={handleSelectChange}
+              disabled={loadingMarket}
+            >
+              <option value="">-- Novo Mercado --</option>
+              {markets?.map((b) => (
+                <option key={b.marketId} value={b.marketId}>
+                  {b.marketName}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label className="form-label">Nome da Mercado</label>
-            <input
+          <Form.Group className="mb-3">
+            <Form.Label>Nome do Mercado</Form.Label>
+            <Form.Control
               type="text"
-              className="form-control"
               value={marketName}
               onChange={(e) => setMarketName(e.target.value)}
+              placeholder="Digite o nome do mercado"
               required
             />
-          </div>
+          </Form.Group>
 
           <div className="d-flex justify-content-end gap-2">
             {editingId && (
@@ -132,8 +131,8 @@ export default function MarketRegisterForm() {
                 Cancelar
               </Button>
             )}
-            <Button type="submit" variant="success" disabled={loading}>
-              {loading
+            <Button type="submit" variant="successMarket" disabled={loadingMarket}>
+              {loadingMarket
                 ? editingId
                   ? 'Atualizando...'
                   : 'Salvando...'
@@ -142,16 +141,16 @@ export default function MarketRegisterForm() {
                 : 'Salvar'}
             </Button>
           </div>
-        </form>
+        </Form>
       </Card>
 
       <ConfirmModal
         show={showConfirmModal}
-        onHide={() => !loading && setShowConfirmModal(false)}
+        onHide={() => !loadingMarket && setShowConfirmModal(false)}
         onConfirm={confirmDelete}
         title="Excluir Mercado"
-        body="Tem certeza que deseja excluir esta marca? Esta ação não poderá ser desfeita."
-        confirmText={loading ? 'Excluindo...' : 'Excluir'}
+        body="Tem certeza que deseja excluir este mercado? Esta ação não poderá ser desfeita."
+        confirmText={loadingMarket ? 'Excluindo...' : 'Excluir'}
         cancelText="Cancelar"
       />
     </>

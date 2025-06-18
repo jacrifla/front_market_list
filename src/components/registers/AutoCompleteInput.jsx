@@ -8,7 +8,7 @@ export default function AutocompleteInput({
   setHighlightedIndex,
   startEditing,
   wrapperRef,
-  suggestionsRef,
+  suggestionsRef
 }) {
   const handleKeyDown = (e) => {
     if (!suggestions.length) return;
@@ -24,54 +24,50 @@ export default function AutocompleteInput({
       );
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      if (highlightedIndex >= 0) {
+      if (highlightedIndex >= 0 && highlightedIndex < suggestions.length) {
         startEditing(suggestions[highlightedIndex]);
       }
     } else if (e.key === 'Escape') {
       setHighlightedIndex(-1);
-      setSearchTerm('');
     }
   };
 
   return (
-    <div ref={wrapperRef} className="autocomplete-wrapper">
-      <Form.Control
-        type="text"
-        className="mb-3"
-        placeholder="Buscar item por nome ou código"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        onKeyDown={handleKeyDown}
-        autoComplete="off"
-        aria-autocomplete="list"
-        aria-controls="item-suggestions"
-        aria-activedescendant={
-          highlightedIndex >= 0
-            ? `suggestion-${suggestions[highlightedIndex].itemId}`
-            : undefined
-        }
-      />
+    <div ref={wrapperRef} className="position-relative mb-3">
+      <Form.Group controlId="searchInput">
+        <Form.Label>Pesquisar Produto</Form.Label>
+        <Form.Control
+          type="text"
+          placeholder="Digite o nome ou código do produto..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={handleKeyDown}
+          aria-autocomplete="list"
+          aria-controls="autocomplete-list"
+          aria-expanded={suggestions.length > 0}
+          aria-haspopup="listbox"
+          autoComplete="off"
+        />
+      </Form.Group>
 
       {suggestions.length > 0 && (
         <ListGroup
           ref={suggestionsRef}
-          className="autocomplete-suggestions"
-          id="item-suggestions"
+          id="autocomplete-list"
+          role="listbox"
+          className="position-absolute w-100 zindex-tooltip"
+          style={{ maxHeight: '180px', overflowY: 'auto' }}
         >
-          {suggestions.map((item, idx) => (
+          {suggestions.map((item, index) => (
             <ListGroup.Item
               key={item.itemId}
-              id={`suggestion-${item.itemId}`}
               action
-              active={idx === highlightedIndex}
+              active={index === highlightedIndex}
               onClick={() => startEditing(item)}
-              onMouseEnter={() => setHighlightedIndex(idx)}
-              className="d-flex justify-content-between align-items-center"
+              role="option"
+              aria-selected={index === highlightedIndex}
             >
-              <span>{item.itemName}</span>
-              {item.barcode && (
-                <small className="text-muted">{item.barcode}</small>
-              )}
+              {item.itemName} {item.barcode ? ` - ${item.barcode}` : ''}
             </ListGroup.Item>
           ))}
         </ListGroup>

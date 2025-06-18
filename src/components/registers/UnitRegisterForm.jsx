@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, Form } from 'react-bootstrap';
 import useUnitService from '../../hooks/useUnitService';
 import useToastMessage from '../../hooks/useToastMessage';
 import ConfirmModal from '../ConfirmModal';
@@ -12,27 +12,27 @@ export default function UnitRegisterForm() {
     deleteUnit,
     fetchUnits,
     units,
-    success,
-    error,
-    loading,
+    successUnit,
+    errorUnit,
+    loadingUnit,
   } = useUnitService();
 
   const [unitName, setUnitName] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  useToastMessage(success, error);
+  useToastMessage(successUnit, errorUnit);
 
   useEffect(() => {
     fetchUnits();
   }, [fetchUnits]);
 
   useEffect(() => {
-    if (success) {
+    if (successUnit) {
       setUnitName('');
       setEditingId(null);
     }
-  }, [success]);
+  }, [successUnit]);
 
   const handleSelectChange = (e) => {
     const id = e.target.value;
@@ -57,7 +57,7 @@ export default function UnitRegisterForm() {
     const formattedName = unitName.trim().toUpperCase();
 
     if (!formattedName) {
-      showToast('O nome da unidade é obrigatório', 'error');
+      showToast('O nome da unidade é obrigatório', 'errorUnit');
       return;
     }
 
@@ -92,20 +92,21 @@ export default function UnitRegisterForm() {
               variant="outline-danger"
               size="sm"
               onClick={() => setShowConfirmModal(true)}
-              disabled={loading}
+              disabled={loadingUnit}
             >
               <i className="bi bi-trash"></i>
             </Button>
           )}
         </div>
 
-        <div className="mb-3">
-          <label className="form-label">Selecionar Unidade para Editar</label>
-          <select
-            className="form-select"
+        <Form.Group className="mb-3">
+          <Form.Label className="form-label">
+            Selecionar Unidade para Editar
+          </Form.Label>
+          <Form.Select
             value={editingId || ''}
             onChange={handleSelectChange}
-            disabled={loading}
+            disabled={loadingUnit}
           >
             <option value="">-- Nova Unidade --</option>
             {units?.map((b) => (
@@ -113,20 +114,19 @@ export default function UnitRegisterForm() {
                 {b.unitName}
               </option>
             ))}
-          </select>
-        </div>
+          </Form.Select>
+        </Form.Group>
 
         <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label className="form-label">Nome da Unidade</label>
-            <input
+          <Form.Group className="mb-3">
+            <Form.Label className="form-label">Nome da Unidade</Form.Label>
+            <Form.Control
               type="text"
-              className="form-control"
               value={unitName}
               onChange={(e) => setUnitName(e.target.value.toUpperCase())}
               required
             />
-          </div>
+          </Form.Group>
 
           <div className="d-flex justify-content-end gap-2">
             {editingId && (
@@ -134,8 +134,8 @@ export default function UnitRegisterForm() {
                 Cancelar
               </Button>
             )}
-            <Button type="submit" variant="success" disabled={loading}>
-              {loading
+            <Button type="submit" variant="successUnit" disabled={loadingUnit}>
+              {loadingUnit
                 ? editingId
                   ? 'Atualizando...'
                   : 'Salvando...'
@@ -149,11 +149,11 @@ export default function UnitRegisterForm() {
 
       <ConfirmModal
         show={showConfirmModal}
-        onHide={() => !loading && setShowConfirmModal(false)}
+        onHide={() => !loadingUnit && setShowConfirmModal(false)}
         onConfirm={confirmDelete}
         title="Excluir Marca"
         body="Tem certeza que deseja excluir esta marca? Esta ação não poderá ser desfeita."
-        confirmText={loading ? 'Excluindo...' : 'Excluir'}
+        confirmText={loadingUnit ? 'Excluindo...' : 'Excluir'}
         cancelText="Cancelar"
       />
     </>

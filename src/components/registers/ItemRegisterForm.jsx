@@ -3,12 +3,13 @@ import useBrandService from '../../hooks/useBrandService';
 import useCategoryService from '../../hooks/useCategoryService';
 import useItemService from '../../hooks/useItemService';
 import useUnitService from '../../hooks/useUnitService';
-import { Card } from 'react-bootstrap';
+import { Button, Card, Form } from 'react-bootstrap';
 import useToastMessage from '../../hooks/useToastMessage';
 import AutocompleteInput from './AutoCompleteInput';
 import SelectField from './SelectField';
 import { AuthContext } from '../../contexts/AuthContext';
 import ConfirmModal from '../ConfirmModal';
+import useDebounce from '../../hooks/useDebounce';
 
 const defaultFormData = {
   itemName: '',
@@ -29,9 +30,9 @@ export default function ItemRegisterForm() {
     deleteItem,
     fetchAllItems,
     items,
-    success: itemSuccess,
-    error: itemError,
-    loading,
+    successItem,
+    errorItem,
+    loadingItem,
   } = useItemService();
 
   const {
@@ -50,18 +51,19 @@ export default function ItemRegisterForm() {
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const suggestionsRef = useRef(null);
   const wrapperRef = useRef(null);
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   const [formData, setFormData] = useState(defaultFormData);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   // Unificar os toasts de erro e sucesso
   useEffect(() => {
-    if (itemSuccess) showToast(itemSuccess, 'success');
-    if (itemError) showToast(itemError, 'error');
+    if (successItem) showToast(successItem, 'success');
+    if (errorItem) showToast(errorItem, 'error');
     if (categoryError) showToast(categoryError, 'error');
     if (brandError) showToast(brandError, 'error');
     if (unitError) showToast(unitError, 'error');
-  }, [itemSuccess, itemError, categoryError, brandError, unitError, showToast]);
+  }, [successItem, errorItem, categoryError, brandError, unitError, showToast]);
 
   // Buscar dados no mount
   useEffect(() => {
@@ -85,7 +87,7 @@ export default function ItemRegisterForm() {
 
   // Resetar form ao salvar com sucesso
   useEffect(() => {
-    if (itemSuccess) {
+    if (successItem) {
       setFormData(defaultFormData);
       setIsEditing(false);
       setEditingItemId(null);
@@ -93,27 +95,24 @@ export default function ItemRegisterForm() {
       setSuggestions([]);
       setHighlightedIndex(-1);
     }
-  }, [itemSuccess]);
+  }, [successItem]);
 
-  // Filtrar sugestões
+  // Filtrar sugestões com debounce
   useEffect(() => {
-    if (!searchTerm.trim()) {
+    if (!debouncedSearchTerm.trim()) {
       setSuggestions([]);
       setHighlightedIndex(-1);
       return;
     }
-    const timeout = setTimeout(() => {
-      const term = searchTerm.toLowerCase();
-      const filtered = items.filter(
-        (item) =>
-          item.itemName.toLowerCase().includes(term) ||
-          (item.barcode && item.barcode.includes(term))
-      );
-      setSuggestions(filtered);
-      setHighlightedIndex(-1);
-    }, 300);
-    return () => clearTimeout(timeout);
-  }, [searchTerm, items]);
+    const term = debouncedSearchTerm.toLowerCase();
+    const filtered = items.filter(
+      (item) =>
+        item.itemName.toLowerCase().includes(term) ||
+        (item.barcode && item.barcode.includes(term))
+    );
+    setSuggestions(filtered);
+    setHighlightedIndex(-1);
+  }, [debouncedSearchTerm, items]);
 
   const cancelEdit = () => {
     setIsEditing(false);
@@ -213,23 +212,24 @@ export default function ItemRegisterForm() {
 
           {isEditing && (
             <div className="d-flex">
-              <button
-                type="button"
+              <Button
+                variant="outline-secondary"
                 onClick={cancelEdit}
                 aria-label="Cancelar edição"
-                className="btn btn-outline-secondary btn-sm me-2 d-flex align-items-center"
+                className="btn-sm me-2 d-flex align-items-center"
               >
                 <i className="bi bi-x-lg"></i>
-              </button>
+              </Button>
 
-              <button
-                type="button"
+              <Button
+                variant="danger"
                 onClick={confirmDelete}
                 aria-label="Deletar item"
-                className="btn btn-danger btn-sm d-flex align-items-center"
+                className="btn-sm d-flex align-items-center"
+                disabled={loadingItem}
               >
-                <i className="bi bi-trash"></i>
-              </button>
+                {loadingItem ? 'Excluindo...' : <i className="bi bi-trash"></i>}
+              </Button>
             </div>
           )}
         </div>
@@ -245,29 +245,28 @@ export default function ItemRegisterForm() {
           suggestionsRef={suggestionsRef}
         />
 
-        <form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit}>
           <div className="row mb-3">
-            <div className="col-md-6 mb-3 mb-md-0">
-              <label className="form-label">Nome do Produto</label>
-              <input
+            <Form.Group controlId="itemName" className="col-md-6 mb-3 mb-md-0">
+              <Form.Label>Nome do Produto</Form.Label>
+              <Form.Control
                 name="itemName"
                 value={formData.itemName}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
                 required
-                className="form-control"
                 autoComplete="off"
               />
-            </div>
-            <div className="col-md-6">
-              <label className="form-label">Código de Barras</label>
-              <input
+            </Form.Group>
+
+            <Form.Group controlId="barcode" className="col-md-6">
+              <Form.Label>Código de Barras</Form.Label>
+              <Form.Control
                 name="barcode"
                 value={formData.barcode}
                 onChange={handleChange}
-                className="form-control"
               />
-            </div>
+            </Form.Group>
           </div>
 
           <div className="row mb-4">
@@ -307,21 +306,17 @@ export default function ItemRegisterForm() {
           </div>
 
           <div className="d-flex justify-content-end">
-            <button
-              type="submit"
-              className="btn btn-success"
-              disabled={loading}
-            >
-              {loading
+            <Button type="submit" variant="success" disabled={loadingItem}>
+              {loadingItem
                 ? isEditing
                   ? 'Atualizando...'
                   : 'Salvando...'
                 : isEditing
                 ? 'Atualizar'
                 : 'Salvar'}
-            </button>
+            </Button>
           </div>
-        </form>
+        </Form>
       </Card>
 
       <ConfirmModal
@@ -332,7 +327,7 @@ export default function ItemRegisterForm() {
         body="Tem certeza que deseja apagar este item? Esta ação não pode ser desfeita."
         confirmText="Apagar"
         cancelText="Cancelar"
-        confirmLoading={loading}
+        loading={loadingItem}
       />
     </>
   );
