@@ -1,3 +1,4 @@
+import { Container, Row, Col } from 'react-bootstrap';
 import BrandRegisterForm from '../components/registers/BrandRegisterForm';
 import CategoryRegisterForm from '../components/registers/CategoryRegisterForm';
 import ItemRegisterForm from '../components/registers/ItemRegisterForm';
@@ -6,31 +7,31 @@ import UnitRegisterForm from '../components/registers/UnitRegisterForm';
 
 export default function Registers() {
   return (
-    <div className="container-fluid px-0 px-lg-3 mt-0 mt-lg-4">
-      <div className="row">
-        <div className="col-12 col-md-8 d-flex mb-3 mb-md-0">
+    <Container fluid className="px-0 px-lg-3 mt-0 mt-lg-4">
+      <Row>
+        <Col xs={12} md={8} className="d-flex mb-3 mb-md-0">
           <div className="w-100 h-100">
             <ItemRegisterForm />
           </div>
-        </div>
-        <div className="col-12 col-md-4 d-flex">
+        </Col>
+        <Col xs={12} md={4} className="d-flex">
           <div className="w-100 h-100">
             <CategoryRegisterForm />
           </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
 
-      <div className="row">
-        <div className="col-12 col-md-4">
+      <Row>
+        <Col xs={12} md={4}>
           <BrandRegisterForm />
-        </div>
-        <div className="col-12 col-md-4">
+        </Col>
+        <Col xs={12} md={4}>
           <UnitRegisterForm />
-        </div>
-        <div className="col-12 col-md-4">
+        </Col>
+        <Col xs={12} md={4}>
           <MarketRegisterForm />
-        </div>
-      </div>
-    </div>
+        </Col>
+      </Row>
+    </Container>
   );
 }
