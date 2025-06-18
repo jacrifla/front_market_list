@@ -87,6 +87,7 @@ export default function Home() {
     setShowCompleteListConfirmModal,
     handleConfirmWithItems,
     handleConfirmOnlyList,
+    closeSelectedList,
   } = useHomeLogic();
 
   useToastMessage(null, errorList);
@@ -121,7 +122,10 @@ export default function Home() {
       <main className="pt-4 px-3">
         {loading && <p>Carregando...</p>}
 
-        <ListHeader listName={selectedList?.listName} total={total} />
+        {selectedListId && (
+          <ListHeader listName={selectedList?.listName} total={total} onClose={closeSelectedList}/>
+          
+        )}
 
         {selectedListId ? (
           <>

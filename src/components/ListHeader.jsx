@@ -1,6 +1,6 @@
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 
-export default function ListHeader({ listName, total }) {
+export default function ListHeader({ listName, total, onClose }) {
   return (
     <Row className="align-items-center mb-3">
       <Col className="d-flex align-items-center gap-2">
@@ -10,6 +10,16 @@ export default function ListHeader({ listName, total }) {
       <Col className="text-end d-flex align-items-center justify-content-end gap-2 fs-5 text-primary">
         <i className="bi bi-receipt" style={{ fontSize: '1.5rem' }}></i>
         <span>R$ {total !== undefined ? total.toFixed(2) : '0.00'}</span>
+        {listName && (
+          <Button
+            variant="outline-secondary"
+            size="sm"
+            onClick={onClose}
+            aria-label="Fechar lista"
+          >
+            <i className="bi bi-x-lg"></i>
+          </Button>
+        )}
       </Col>
     </Row>
   );

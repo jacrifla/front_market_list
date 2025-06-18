@@ -186,6 +186,13 @@ const useHomeLogic = () => {
         }
     };
 
+    function closeSelectedList() {
+        setSelectedListId(null);
+        setSelectedItem(null);
+        setSuggestions([]);
+    }
+
+
     // Excluir Lista
     const handleDeleteList = async (listId) => {
         await deleteList(listId);
@@ -524,7 +531,8 @@ const useHomeLogic = () => {
         handleConfirmOnlyList,
         successListItem,
         errorListItem,
-        loadingItem
+        loadingItem,
+        closeSelectedList
     };
 };
 
