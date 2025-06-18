@@ -1,7 +1,6 @@
 import { Card } from 'react-bootstrap';
 
 export default function ItemCard({ item, index, selectedItem, onSelect }) {
-  console.log('onSelect é:', typeof onSelect);
   const isSelected = selectedItem?.itemListId === item.itemListId;
   const isBought = !!item.purchasedAt;
 
