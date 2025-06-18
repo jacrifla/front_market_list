@@ -17,6 +17,15 @@ import React from 'react';
 
 export default function Home() {
   const {
+    loadingList,
+    successList,
+    errorList,
+    loadingListItem,
+    // successListItem,
+    // errorListItem,
+    loadingItem,
+    errorItem,
+    successItem,
     selectedList,
     selectedListId,
     selectedItem,
@@ -24,10 +33,6 @@ export default function Home() {
     lists,
     listItems,
     loading,
-    errorList,
-    errorItem,
-    successList,
-    successItem,
     total,
     handleSelectList,
     handleAddList,
@@ -72,8 +77,6 @@ export default function Home() {
     setIsPurchaseDateModalOpen,
     setPendingMarkAsBought,
     handleCheckItem,
-    loadingList,
-    loadingListItem,
 
     handleStartCompleteList,
 
@@ -158,7 +161,7 @@ export default function Home() {
         inputValue={modalInputValue}
         setInputValue={setModalInputValue}
         mode={modalMode}
-        loading={loading}
+        loading={loadingList}
       />
 
       <AddEditListItemModal
@@ -184,6 +187,7 @@ export default function Home() {
         show={isConfirmSaveModalOpen}
         onHide={handleCancel}
         onConfirm={handleConfirmSave}
+        confirmLoading={loadingItem}
         confirmText="Sim, salvar"
         cancelText="Cancelar"
         extraButton={{
