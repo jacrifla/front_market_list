@@ -1,11 +1,14 @@
+import { Button } from 'react-bootstrap';
+
 export default function FloatingAddButton({ onClick, icon = 'plus' }) {
   return (
-    <button
+    <Button
       onClick={onClick}
       aria-label="Adicionar"
-      className="btn btn-primary rounded-circle floating-add-button"
+      variant="primary"
+      className="rounded-circle floating-add-button"
     >
       <i className={`bi bi-${icon}`}></i>
-    </button>
+    </Button>
   );
 }
