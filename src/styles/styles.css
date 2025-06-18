@@ -296,3 +296,8 @@ html {
 .autocomplete-suggestion:hover {
   background-color: #f8f9fa;
 }
+
+.custom-modal-backdrop {
+  display: block;
+  background-color: rgba(0, 0, 0, 0.2);
+}
