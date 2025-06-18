@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Button, ListGroup, ButtonGroup } from 'react-bootstrap';
 
 export default function SidebarLists({
   lists,
@@ -14,11 +15,7 @@ export default function SidebarLists({
   loadingList,
 }) {
   useEffect(() => {
-    if (show) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    document.body.style.overflow = show ? 'hidden' : '';
   }, [show]);
 
   const formatDate = (dateStr) => {
@@ -32,73 +29,82 @@ export default function SidebarLists({
       <div
         className={`sidebar-overlay ${show ? 'show' : ''}`}
         onClick={onClose}
+        style={{
+          position: 'fixed',
+          inset: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.3)',
+          zIndex: 1040,
+          display: show ? 'block' : 'none',
+        }}
       />
 
       {/* Sidebar */}
-      <div className={`sidebar-container ${show ? 'open' : ''}`}>
+      <div
+        className={`sidebar-container ${show ? 'open' : ''}`}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: show ? 0 : '-320px',
+          width: '320px',
+          height: '100vh',
+          backgroundColor: '#fff',
+          boxShadow: '2px 0 5px rgba(0,0,0,0.3)',
+          transition: 'left 0.3s ease',
+          zIndex: 1050,
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
         <div className="sidebar-header d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
           <div className="d-flex align-items-center gap-2">
             <i className="bi bi-list-task fs-4 text-primary"></i>
             <h5 className="mb-0">Minhas Listas</h5>
           </div>
           <div className="d-flex gap-2">
-            <button
-              className="btn btn-outline-primary btn-sm"
+            <Button
+              variant="outline-primary"
+              size="sm"
               onClick={onAddList}
               title="Nova Lista"
               disabled={loadingList}
             >
-              {loadingList ? (
-                <span
-                  className="spinner-border spinner-border-sm"
-                  role="status"
-                />
-              ) : (
-                <i className="bi bi-plus-lg"></i>
-              )}
-            </button>
-            <button
-              className="btn btn-outline-secondary btn-sm"
+              <i className="bi bi-plus-lg"></i>
+            </Button>
+            <Button
+              variant="outline-secondary"
+              size="sm"
               onClick={onClose}
               title="Fechar"
             >
               <i className="bi bi-x-lg"></i>
-            </button>
+            </Button>
           </div>
         </div>
 
-        <div
-          className="list-items px-3 py-2 overflow-auto"
+        <ListGroup
+          className="flex-grow-1 px-3 py-2 overflow-auto"
           style={{ maxHeight: 'calc(100vh - 60px)' }}
         >
           {lists.map((list) => {
             const isSelected = list.listId === selectedListId;
+            const isCompleted = !!list.completedAt;
+
             return (
-              <div
+              <ListGroup.Item
                 key={list.listId}
-                className={`list-item btn w-100 mb-3 text-start ${
-                  isSelected ? 'active' : ''
-                } ${
-                  list.completedAt
-                    ? 'bg-success bg-opacity-25 border-success'
-                    : 'btn-light'
-                }`}
-                style={{ padding: '0.75rem' }}
+                as="div"
+                active={isSelected}
+                variant={isCompleted ? 'success' : undefined}
+                className="mb-3"
+                style={{ padding: '0.75rem', cursor: 'pointer' }}
+                onClick={() => {
+                  onSelectList(list.listId);
+                  onClose();
+                }}
+                title={list.listName}
               >
-                {/* Nome e Data lado a lado */}
-                <div
-                  className="d-flex justify-content-between align-items-center"
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => {
-                    onSelectList(list.listId);
-                    onClose();
-                  }}
-                >
-                  <strong
-                    className="text-truncate me-3"
-                    title={list.listName}
-                    style={{ flex: 1 }}
-                  >
+                <div className="d-flex justify-content-between align-items-center">
+                  <strong className="text-truncate me-3" style={{ flex: 1 }}>
                     {list.listName}
                   </strong>
                   <small className="text-muted flex-shrink-0">
@@ -106,53 +112,58 @@ export default function SidebarLists({
                   </small>
                 </div>
 
-                {/* Botões em linha ocupando toda largura, abaixo */}
-                <div
-                  className="btn-group btn-group-sm mt-2 w-100"
+                <ButtonGroup
+                  size="sm"
+                  className="mt-2 w-100"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <button
-                    className="btn btn-outline-success flex-fill"
-                    title={
-                      list.completedAt ? 'Já comprada' : 'Marcar como comprada'
-                    }
+                  <Button
+                    variant={isCompleted ? 'success' : 'outline-success'}
+                    className="flex-fill"
+                    title={isCompleted ? 'Já comprada' : 'Marcar como comprada'}
                     onClick={() => onMarkPurchased(list.listId)}
-                    disabled={!!list.completedAt}
+                    disabled={isCompleted || loadingList}
                   >
                     <i
                       className={`bi ${
-                        list.completedAt
+                        isCompleted
                           ? 'bi-check-circle-fill'
                           : 'bi-check2-square'
                       }`}
-                    ></i>
-                  </button>
-                  <button
-                    className="btn btn-outline-warning flex-fill"
+                    />
+                  </Button>
+                  <Button
+                    variant="outline-warning"
+                    className="flex-fill"
                     title="Editar lista"
                     onClick={() => onEditList(list)}
+                    disabled={loadingList}
                   >
-                    <i className="bi bi-pencil"></i>
-                  </button>
-                  <button
-                    className="btn btn-outline-danger flex-fill"
+                    <i className="bi bi-pencil" />
+                  </Button>
+                  <Button
+                    variant="outline-danger"
+                    className="flex-fill"
                     title="Excluir lista"
                     onClick={() => onDeleteList(list.listId)}
+                    disabled={loadingList}
                   >
-                    <i className="bi bi-trash"></i>
-                  </button>
-                  <button
-                    className="btn btn-outline-info flex-fill"
+                    <i className="bi bi-trash" />
+                  </Button>
+                  <Button
+                    variant="outline-info"
+                    className="flex-fill"
                     title="Compartilhar lista"
                     onClick={() => onShareList(list.listId)}
+                    disabled={loadingList}
                   >
-                    <i className="bi bi-share"></i>
-                  </button>
-                </div>
-              </div>
+                    <i className="bi bi-share" />
+                  </Button>
+                </ButtonGroup>
+              </ListGroup.Item>
             );
           })}
-        </div>
+        </ListGroup>
       </div>
     </>
   );
