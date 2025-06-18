@@ -1,4 +1,4 @@
-import React from 'react';
+import { Modal, Button, Form } from 'react-bootstrap';
 
 export default function AddEditListModal({
   show,
@@ -6,11 +6,9 @@ export default function AddEditListModal({
   onConfirm,
   inputValue,
   setInputValue,
-  mode, // 'add' ou 'edit'
+  mode,
   loading = false,
 }) {
-  if (!show) return null;
-
   const title = mode === 'add' ? 'Nova Lista' : 'Editar Lista';
 
   const handleSubmit = (e) => {
@@ -19,61 +17,37 @@ export default function AddEditListModal({
   };
 
   return (
-    <div className="modal-backdrop show" style={{ display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
-      <div
-        className="modal d-block"
-        tabIndex="-1"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modalLabel"
-      >
-        <div className="modal-dialog">
-          <form onSubmit={handleSubmit}>
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="modalLabel">
-                  {title}
-                </h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  aria-label="Fechar"
-                  onClick={onClose}
-                ></button>
-              </div>
-              <div className="modal-body">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Digite o nome da lista"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  autoFocus
-                  required
-                  disabled={loading}
-                />
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={onClose}
-                  disabled={loading}
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  disabled={loading || inputValue.trim() === ''}
-                >
-                  {loading ? 'Salvando...' : 'Salvar'}
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+    <Modal show={show} onHide={onClose} backdrop="static" keyboard={!loading}>
+      <Form onSubmit={handleSubmit}>
+        <Modal.Header closeButton={!loading}>
+          <Modal.Title>{title}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <Form.Control
+            type="text"
+            placeholder="Digite o nome da lista"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            autoFocus
+            required
+            disabled={loading}
+          />
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={onClose} disabled={loading}>
+            Cancelar
+          </Button>
+          <Button
+            variant="primary"
+            type="submit"
+            disabled={loading || inputValue.trim() === ''}
+          >
+            {loading ? 'Salvando...' : 'Salvar'}
+          </Button>
+        </Modal.Footer>
+      </Form>
+    </Modal>
   );
 }
