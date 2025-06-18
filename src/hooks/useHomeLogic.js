@@ -178,12 +178,12 @@ const useHomeLogic = () => {
             const nova = await createList(modalInputValue.trim());
             if (nova?.listId) {
                 setSelectedListId(nova.listId);
+                setIsModalOpen(false);
             }
         } else if (modalMode === 'edit') {
             await updateList(selectedListId, { listName: modalInputValue.trim() });
-
+            setIsModalOpen(false);
         }
-        setIsModalOpen(false);
     };
 
     // Excluir Lista
@@ -451,8 +451,8 @@ const useHomeLogic = () => {
         lists,
         listItems,
         loadingListItem,
-        errorList: listError,
-        errorItem: itemError,
+        errorList,
+        errorItem,
         total,
         handleSelectList,
         handleAddList,
@@ -471,8 +471,8 @@ const useHomeLogic = () => {
         shareToken,
         isShareModalOpen,
         setIsShareModalOpen,
-        successList: listSuccess,
-        successItem: itemSuccess,
+        successList,
+        successItem,
         isItemModalOpen,
         setIsItemModalOpen,
         itemModalMode,
@@ -522,6 +522,9 @@ const useHomeLogic = () => {
         setShowCompleteListConfirmModal,
         handleConfirmWithItems,
         handleConfirmOnlyList,
+        successListItem,
+        errorListItem,
+        loadingItem
     };
 };
 
