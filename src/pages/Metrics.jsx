@@ -7,10 +7,12 @@ import MetricsSummary from '../components/metrics/MetricsSummary.jsx';
 import MetricsMostPurchased from '../components/metrics/MetricsMostPurchased.jsx';
 import MetricsCategoryPurchases from '../components/metrics/MetricsCategoryPurchases.jsx';
 import MetricsTopItems from '../components/metrics/MetricsTopItems.jsx';
+import useToastMessage from '../hooks/useToastMessage.js';
 
 export default function Metrics() {
   const { user } = useContext(AuthContext);
   const { fetchMetricsData } = useMetricsService();
+  const { showToast } = useToastMessage();
 
   const [metrics, setMetrics] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -30,7 +32,7 @@ export default function Metrics() {
       const data = await fetchMetricsData(user.userId, startDate, endDate);
       setMetrics(data);
     } catch (err) {
-      alert('Erro ao buscar métricas.');
+       showToast('Erro ao buscar métricas.', 'error');
       console.error(err);
     } finally {
       setLoading(false);

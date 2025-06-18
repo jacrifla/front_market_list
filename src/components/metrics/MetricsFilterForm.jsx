@@ -1,33 +1,40 @@
+import { Button, Col, Form, Row } from "react-bootstrap";
+
 export default function MetricsFilterForm({ startDate, endDate, setStartDate, setEndDate, onSearch, loading }) {
   return (
-    <div className="row mb-3">
-      <div className="col-md-4">
-        <label className="form-label">Data Inicial</label>
-        <input
-          type="date"
-          className="form-control"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-        />
-      </div>
-      <div className="col-md-4">
-        <label className="form-label">Data Final</label>
-        <input
-          type="date"
-          className="form-control"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-        />
-      </div>
-      <div className="col-md-4 d-flex align-items-end">
-        <button
-          className="btn btn-primary w-100"
-          onClick={onSearch}
-          disabled={loading}
-        >
-          {loading ? 'Buscando...' : 'Buscar'}
-        </button>
-      </div>
-    </div>
+    <Form className="mb-3">
+      <Row>
+        <Col md={4}>
+          <Form.Group controlId="startDate">
+            <Form.Label>Data Inicial</Form.Label>
+            <Form.Control
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </Form.Group>
+        </Col>
+        <Col md={4}>
+          <Form.Group controlId="endDate">
+            <Form.Label>Data Final</Form.Label>
+            <Form.Control
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </Form.Group>
+        </Col>
+        <Col md={4} className="d-flex align-items-end">
+          <Button
+            className="w-100"
+            variant="primary"
+            onClick={onSearch}
+            disabled={loading}
+          >
+            {loading ? 'Buscando...' : 'Buscar'}
+          </Button>
+        </Col>
+      </Row>
+    </Form>
   );
 }

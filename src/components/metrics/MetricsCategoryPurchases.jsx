@@ -1,16 +1,18 @@
+import { Badge, ListGroup } from "react-bootstrap";
+
 export default function MetricsCategoryPurchases({ categories }) {
   return (
     <>
       <h5 className="text-primary">Por Categoria:</h5>
       {categories.length > 0 ? (
-        <ul className="list-group mb-3">
+        <ListGroup className="mb-3">
           {categories.map((cat, i) => (
-            <li className="list-group-item d-flex justify-content-between" key={cat.categoryName + i}>
+            <ListGroup.Item key={cat.categoryName + i} className="d-flex justify-content-between">
               <span>{cat.categoryName}</span>
-              <span className="badge bg-info">R$ {Number(cat.totalSpent).toFixed(2)}</span>
-            </li>
+              <Badge bg="info">R$ {Number(cat.totalSpent).toFixed(2)}</Badge>
+            </ListGroup.Item>
           ))}
-        </ul>
+        </ListGroup>
       ) : (
         <p>Nenhuma compra por categoria nesse período.</p>
       )}
