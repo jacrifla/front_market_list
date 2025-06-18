@@ -1,6 +1,9 @@
+import { Card } from 'react-bootstrap';
+
 export default function ItemCard({ item, index, selectedItem, onSelect }) {
+  console.log('onSelect é:', typeof onSelect);
   const isSelected = selectedItem?.itemListId === item.itemListId;
-  const isBought = item.purchasedAt;
+  const isBought = !!item.purchasedAt;
 
   const truncate = (text, maxLength) => {
     if (!text) return '';
@@ -8,21 +11,22 @@ export default function ItemCard({ item, index, selectedItem, onSelect }) {
   };
 
   return (
-    <div
-      className={`card p-2 mb-1 ${isSelected ? 'border-primary' : ''} ${
-        isBought ? 'bg-light text-muted' : ''
-      }`}
+    <Card
+      border={isSelected ? 'primary' : undefined}
+      bg={isBought ? 'light' : undefined}
+      text={isBought ? 'muted' : undefined}
+      className="mb-1"
       style={{
         cursor: isBought ? 'not-allowed' : 'pointer',
         opacity: isBought ? 0.5 : 1,
       }}
-      onClick={() => !isBought && onSelect(item)}
+      onClick={() => !isBought && onSelect?.(item)}
     >
-      <div className="d-flex justify-content-between align-items-center">
-        <span className="fs-6">
+      <Card.Body className="p-2 d-flex justify-content-between align-items-center">
+        <Card.Text className="fs-6 mb-0">
           {index + 1}. {truncate(item.itemName, 30)}
-        </span>
-      </div>
-    </div>
+        </Card.Text>
+      </Card.Body>
+    </Card>
   );
 }
