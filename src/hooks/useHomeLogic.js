@@ -426,7 +426,7 @@ const useHomeLogic = () => {
     const handleSubmitItemInfo = async (data) => {
         if (!selectedItem) return;
 
-        await markItemAsBought({
+        const payload = {
             userId,
             itemId: selectedItem.itemId,
             listId: selectedItem.listId,
@@ -436,8 +436,10 @@ const useHomeLogic = () => {
             unitId: data.unitId,
             marketId: data.marketId,
             barcode: data.barcode,
-            purchaseDate: purchaseDateByListId[selectedItem.listId]
-        });
+            purchaseDate: purchaseDateByListId[selectedItem.listId],
+        };
+        
+        await markItemAsBought(payload);
 
         handleCancel();
     };
