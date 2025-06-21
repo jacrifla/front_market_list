@@ -1,11 +1,13 @@
 import { API_BASE_URL } from './api';
 
 export async function fetchWrapper(endpoint, method = 'GET', body = null, headers = {}) {
+    const token = localStorage.getItem('token');
     const config = {
         method,
         headers: {
             'Content-Type': 'application/json',
             ...headers,
+             ...(token && !headers.Authorization && { Authorization: `Bearer ${token}` }),
         },
     };
 
