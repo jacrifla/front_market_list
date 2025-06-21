@@ -246,8 +246,19 @@ const useHomeLogic = () => {
     };
 
     const handleStartCompleteList = (listId) => {
+        const existingDate = purchaseDateByListId[listId] || localStorage.getItem('lastUsedPurchaseDate');
+
         setPendingListIdToComplete(listId);
-        setShowPurchaseDateModal(true);
+
+        if (existingDate) {
+            setPurchaseDateByListId(prev => ({
+                ...prev,
+                [listId]: existingDate
+            }));
+            setShowCompleteListConfirmModal(true);
+        } else {
+            setShowPurchaseDateModal(true);
+        }
     };
 
     const handleConfirmPurchaseDate = (date) => {
@@ -255,6 +266,8 @@ const useHomeLogic = () => {
             ...prev,
             [pendingListIdToComplete]: date,
         }));
+        localStorage.setItem('lastUsedPurchaseDate', date);
+
         setShowPurchaseDateModal(false);
         setShowCompleteListConfirmModal(true);
     };
@@ -389,7 +402,7 @@ const useHomeLogic = () => {
     };
 
     const handleCheckItem = (item) => {
-        const listDate = purchaseDateByListId[item.listId];
+        const listDate = getPurchaseDateForList(item.listId);
 
         if (!listDate) {
             setPendingMarkAsBought(item);
@@ -408,8 +421,9 @@ const useHomeLogic = () => {
             [pendingMarkAsBought.listId]: date
         }));
 
-        handleMarkAsBoughtClick(pendingMarkAsBought);
         localStorage.setItem('lastUsedPurchaseDate', date);
+
+        handleMarkAsBoughtClick(pendingMarkAsBought);
 
         setPendingMarkAsBought(null);
         setIsPurchaseDateModalOpen(false);
@@ -488,7 +502,6 @@ const useHomeLogic = () => {
         await deleteListItem(selectedItem.itemListId, selectedListId);
         setSelectedItem(null);
     };
-
 
     return {
         selectedList,
