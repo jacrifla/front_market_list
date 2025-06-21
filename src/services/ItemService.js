@@ -5,7 +5,10 @@ const endpointBase = '/items';
 const itemService = {
     getAllItems: async () => fetchWrapper(`${endpointBase}/all`),
 
-    getItemByBarcodeName: async (searchTerm) => fetchWrapper(`${endpointBase}/search/${searchTerm}`),
+    getItemByBarcodeName: async (searchTerm) => {
+        const encodedTerm = encodeURIComponent(searchTerm.trim());
+        return fetchWrapper(`${endpointBase}/search/${encodedTerm}`);
+    },
 
     getItemById: async (itemId) => fetchWrapper(`${endpointBase}/id/${itemId}`),
 
