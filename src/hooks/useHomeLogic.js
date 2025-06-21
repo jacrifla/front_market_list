@@ -41,6 +41,8 @@ const useHomeLogic = () => {
     const [pendingListIdToComplete, setPendingListIdToComplete] = useState(null);
     const [showCompleteListConfirmModal, setShowCompleteListConfirmModal] = useState(false);
 
+    const [lastUsedMarketId, setLastUsedMarketId] = useState(null);
+
     const [isItemModalOpen, setIsItemModalOpen] = useState(false);
     const [itemModalMode, setItemModalMode] = useState('add');
     const [itemFormData, setItemFormData] = useState({
@@ -120,6 +122,29 @@ const useHomeLogic = () => {
         const newTotal = listItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
         setTotal(newTotal);
     }, [listItems]);
+
+    useEffect(() => {
+        const savedMarketId = localStorage.getItem('lastUsedMarketId');
+        if (savedMarketId) setLastUsedMarketId(Number(savedMarketId));
+    }, []);
+
+    useEffect(() => {
+        if (lastUsedMarketId !== null) {
+            localStorage.setItem('lastUsedMarketId', lastUsedMarketId);
+        }
+    }, [lastUsedMarketId]);
+
+    useEffect(() => {
+        const savedDate = localStorage.getItem('lastUsedPurchaseDate');
+        if (savedDate) {
+            // aplica para listas já carregadas (se quiser aplicar automaticamente)
+            setPurchaseDateByListId(prev => ({
+                ...prev,
+                default: savedDate
+            }));
+        }
+    }, []);
+
 
 
     const handleItemNameChange = async (name) => {
@@ -383,6 +408,7 @@ const useHomeLogic = () => {
         }));
 
         handleMarkAsBoughtClick(pendingMarkAsBought);
+        localStorage.setItem('lastUsedPurchaseDate', date);
 
         setPendingMarkAsBought(null);
         setIsPurchaseDateModalOpen(false);
@@ -410,7 +436,7 @@ const useHomeLogic = () => {
             categoryId: null,
             brandId: null,
             unitId: null,
-            marketId: null,
+            marketId: lastUsedMarketId,
             barcode: null,
             purchaseDate: purchaseDateByListId[selectedItem.listId]
         });
@@ -423,8 +449,15 @@ const useHomeLogic = () => {
         setIsSaveItemModalOpen(true);
     };
 
+    const getPurchaseDateForList = (listId) => {
+        return purchaseDateByListId[listId] || localStorage.getItem('lastUsedPurchaseDate') || null;
+    };
+
+
     const handleSubmitItemInfo = async (data) => {
         if (!selectedItem) return;
+
+        setLastUsedMarketId(data.marketId);
 
         const payload = {
             userId,
@@ -436,9 +469,9 @@ const useHomeLogic = () => {
             unitId: data.unitId,
             marketId: data.marketId,
             barcode: data.barcode,
-            purchaseDate: purchaseDateByListId[selectedItem.listId],
+            purchaseDate: getPurchaseDateForList(selectedItem.listId),
         };
-        
+
         await markItemAsBought(payload);
 
         handleCancel();
