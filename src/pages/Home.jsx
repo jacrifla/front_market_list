@@ -88,7 +88,8 @@ export default function Home() {
     handleConfirmWithItems,
     handleConfirmOnlyList,
     closeSelectedList,
-  } = useHomeLogic();
+    unmarkedItems,
+  } = useHomeLogic();  
 
   useToastMessage(null, errorList);
   useToastMessage(null, errorItem);
@@ -123,8 +124,11 @@ export default function Home() {
         {loading && <p>Carregando...</p>}
 
         {selectedListId && (
-          <ListHeader listName={selectedList?.listName} total={total} onClose={closeSelectedList}/>
-          
+          <ListHeader
+            listName={selectedList?.listName}
+            total={total}
+            onClose={closeSelectedList}
+          />
         )}
 
         {selectedListId ? (
@@ -237,6 +241,8 @@ export default function Home() {
         cancelText="Cancelar"
         confirmText="Lista e Itens"
         onConfirm={handleConfirmWithItems}
+        confirmDisabled={unmarkedItems.length === 0}
+        showConfirmButton={unmarkedItems.length > 0}
         extraButton={{
           label: 'Somente a lista',
           variant: 'outline-primary',

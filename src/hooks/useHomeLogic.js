@@ -117,6 +117,7 @@ const useHomeLogic = () => {
     }, [fetchBrands, fetchCategorys, fetchUnits, fetchMarkets]);
 
     const selectedList = lists.find((list) => list.listId === selectedListId) || null;
+    const unmarkedItems = listItems.filter(item => item.listId === pendingListIdToComplete && !item.purchasedAt);
 
     useEffect(() => {
         const newTotal = listItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
@@ -571,7 +572,8 @@ const useHomeLogic = () => {
         successListItem,
         errorListItem,
         loadingItem,
-        closeSelectedList
+        closeSelectedList,
+        unmarkedItems,
     };
 };
 
