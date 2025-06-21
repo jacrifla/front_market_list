@@ -94,7 +94,7 @@ export default function AddEditListItemModal({
             !formData.itemName || formData.quantity <= 0 || loadingListItem
           }
         >
-          Salvar
+          {loadingListItem ? 'Salvando...' : 'Salvar'}
         </Button>
       </Modal.Footer>
     </Modal>

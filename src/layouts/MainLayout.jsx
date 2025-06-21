@@ -20,7 +20,7 @@ export default function MainLayout() {
     <>
       <Navbar bg="primary" variant="dark" expand="lg" className="shadow">
         <Container>
-          <Navbar.Brand href="/" className="fw-bold ps-5">
+          <Navbar.Brand as={NavLink} to="/" className="fw-bold ps-5">
             <i className="bi bi-cart4 me-2"></i> Lista da Mamãe
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="main-navbar" />
