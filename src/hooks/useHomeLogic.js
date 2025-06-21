@@ -414,10 +414,14 @@ const useHomeLogic = () => {
         setIsPurchaseDateModalOpen(false);
     };
 
-    const handleMarkAsBoughtClick = useCallback((item) => {
+    const handleMarkAsBoughtClick = (item) => {
         setSelectedItem(item);
-        setIsConfirmSaveModalOpen(true);
-    }, []);
+        if (item.itemType === 'common') {
+            handleDontSave();
+        } else {
+            setIsConfirmSaveModalOpen(true);
+        }
+    };
 
     const handleCancel = () => {
         setSelectedItem(null);
