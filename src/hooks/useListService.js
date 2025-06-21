@@ -82,9 +82,7 @@ const useListService = (userId) => {
         }
     };
 
-    const markListCompleted = async ({ listId, userId, totalAmount, purchaseDate }) => {
-        console.log(listId, userId, totalAmount);
-        
+    const markListCompleted = async ({ listId, userId, totalAmount, purchaseDate }) => {        
         setLoading(true);
         clearMessages();
 
