@@ -402,7 +402,7 @@ const useHomeLogic = () => {
     };
 
     const handleCheckItem = (item) => {
-        const listDate = getPurchaseDateForList(item.listId);
+        const listDate = purchaseDateByListId[item.listId];
 
         if (!listDate) {
             setPendingMarkAsBought(item);
@@ -469,7 +469,12 @@ const useHomeLogic = () => {
     };
 
     const getPurchaseDateForList = (listId) => {
-        return purchaseDateByListId[listId] || localStorage.getItem('lastUsedPurchaseDate') || null;
+        // Retorna a data específica da lista, se já tiver sido definida
+        if (purchaseDateByListId[listId]) return purchaseDateByListId[listId];
+
+        // Se não tiver, tenta pegar a última usada no localStorage
+        const lastUsedDate = localStorage.getItem('lastUsedPurchaseDate');
+        return lastUsedDate || null;
     };
 
 
