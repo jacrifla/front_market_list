@@ -12,7 +12,7 @@ export default function useMetricsService() {
     getTopItemsByValue,
   } = usePurchaseService();
 
-  const fetchMetricsData = useCallback(async (userId, start, end) => {
+  const fetchMetricsData = useCallback(async (start, end) => {
     const [
       totalSpent,
       avgSpend,
@@ -22,13 +22,13 @@ export default function useMetricsService() {
       categoryPurchases,
       topItemsByValue,
     ] = await Promise.all([
-      getTotalSpentByPeriod(userId, start, end),
-      getAvgSpendPerPurchase(userId, start, end),
-      getLargestPurchase(userId, start, end),
-      getAvgDailySpend(userId, start, end),
-      getMostPurchasedItems(userId, 5),
-      getCategoryPurchases(userId, start, end),
-      getTopItemsByValue(userId, start, end),
+      getTotalSpentByPeriod(start, end),
+      getAvgSpendPerPurchase(start, end),
+      getLargestPurchase(start, end),
+      getAvgDailySpend(start, end),
+      getMostPurchasedItems(5),
+      getCategoryPurchases(start, end),
+      getTopItemsByValue(start, end),
     ]);
 
     return {

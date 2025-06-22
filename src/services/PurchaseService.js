@@ -3,48 +3,48 @@ import { fetchWrapper } from "../utils/fetchWrapper";
 const endpointBase = '/purchase';
 
 const purchaseService = {
-    getTotalSpentByPeriod: async (userId, startDate, endDate) => {
-        const query = `?userId=${userId}&startDate=${startDate}&endDate=${endDate}`;
+    getTotalSpentByPeriod: async (startDate, endDate) => {
+        const query = `?startDate=${startDate}&endDate=${endDate}`;
         return fetchWrapper(`${endpointBase}/total-spent${query}`);
     },
 
-    getMostPurchasedItems: async (userId, limit) => {
-        const query = `?userId=${userId}&limit=${limit}`;
+    getMostPurchasedItems: async (limit) => {
+        const query = `?limit=${limit}`;
         return fetchWrapper(`${endpointBase}/most-purchased${query}`);
     },
     
-    getItemsPurchasedByPeriod: async (userId, startDate, endDate) => {
-        const query = `?userId=${userId}&startDate=${startDate}&endDate=${endDate}`;
+    getItemsPurchasedByPeriod: async (startDate, endDate) => {
+        const query = `?startDate=${startDate}&endDate=${endDate}`;
         return fetchWrapper(`${endpointBase}/items-purchased${query}`);
     },
 
-    getAvgSpendPerPurchase: async (userId, startDate, endDate) => {
-        const query = `?userId=${userId}&startDate=${startDate}&endDate=${endDate}`;
+    getAvgSpendPerPurchase: async (startDate, endDate) => {
+        const query = `?startDate=${startDate}&endDate=${endDate}`;
         return fetchWrapper(`${endpointBase}/avg-spend-per-purchase${query}`);
     },
 
-    getLargestPurchase: async (userId, startDate, endDate) => {
-        const query = `?userId=${userId}&startDate=${startDate}&endDate=${endDate}`;
+    getLargestPurchase: async (startDate, endDate) => {
+        const query = `?startDate=${startDate}&endDate=${endDate}`;
         return fetchWrapper(`${endpointBase}/largest-purchase${query}`);
     },
 
-    getAvgDailySpend: async (userId, startDate, endDate) => {
-        const query = `?userId=${userId}&startDate=${startDate}&endDate=${endDate}`;
+    getAvgDailySpend: async (startDate, endDate) => {
+        const query = `?startDate=${startDate}&endDate=${endDate}`;
         return fetchWrapper(`${endpointBase}/avg-daily-spend${query}`);
     },
 
-    getCategoryPurchases: async (userId, startDate, endDate) => {
-        const query = `?userId=${userId}&startDate=${startDate}&endDate=${endDate}`;
+    getCategoryPurchases: async (startDate, endDate) => {
+        const query = `?startDate=${startDate}&endDate=${endDate}`;
         return fetchWrapper(`${endpointBase}/category-purchases${query}`);
     },
 
-    getComparisonSpent: async (userId, startDate, endDate, limit, offset) => {
-        const query = `?userId=${userId}&startDate=${startDate}&endDate=${endDate}&limit=${limit}&offset=${offset}`;
+    getComparisonSpent: async (startDate, endDate, page = 1, limit = 10) => {
+        const query = `?startDate=${startDate}&endDate=${endDate}&page=${page}&limit=${limit}`;
         return fetchWrapper(`${endpointBase}/comparison-spent${query}`);
     },
 
-    getTopItemsByValue: async (userId, startDate, endDate) => {
-        const query = `?userId=${userId}&startDate=${startDate}&endDate=${endDate}`;
+    getTopItemsByValue: async (startDate, endDate) => {
+        const query = `?startDate=${startDate}&endDate=${endDate}`;
         return fetchWrapper(`${endpointBase}/top-items-by-value${query}`);
     },
 };

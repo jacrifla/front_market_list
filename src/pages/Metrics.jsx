@@ -1,5 +1,4 @@
-import { useContext, useState } from 'react';
-import { AuthContext } from '../contexts/AuthContext';
+import { useState } from 'react';
 
 import useMetricsService from '../hooks/useMetrics.js';
 import MetricsFilterForm from '../components/metrics/MetricsFilterForm';
@@ -8,18 +7,18 @@ import MetricsMostPurchased from '../components/metrics/MetricsMostPurchased.jsx
 import MetricsCategoryPurchases from '../components/metrics/MetricsCategoryPurchases.jsx';
 import MetricsTopItems from '../components/metrics/MetricsTopItems.jsx';
 import useToastMessage from '../hooks/useToastMessage.js';
+import MetricsComparisonSpent from '../components/metrics/MetricsComparisonSpent.jsx';
 
 export default function Metrics() {
-  const { user } = useContext(AuthContext);
   const { fetchMetricsData } = useMetricsService();
   const { showToast } = useToastMessage();
 
   const [metrics, setMetrics] = useState(null);
   const [loading, setLoading] = useState(false);
-  
+
   const today = new Date();
   const currentYear = today.getFullYear();
-  
+
   const defaultStart = `${currentYear}-01-01`;
   const defaultEnd = today.toISOString().split('T')[0];
 
@@ -29,10 +28,10 @@ export default function Metrics() {
   const handleFetchMetrics = async () => {
     setLoading(true);
     try {
-      const data = await fetchMetricsData(user.userId, startDate, endDate);
+      const data = await fetchMetricsData(startDate, endDate);
       setMetrics(data);
     } catch (err) {
-       showToast('Erro ao buscar métricas.', 'error');
+      showToast('Erro ao buscar métricas.', 'error');
       console.error(err);
     } finally {
       setLoading(false);
@@ -58,6 +57,12 @@ export default function Metrics() {
           <MetricsMostPurchased items={metrics.mostPurchasedItems} />
           <MetricsCategoryPurchases categories={metrics.categoryPurchases} />
           <MetricsTopItems items={metrics.topItemsByValue} />
+
+          <MetricsComparisonSpent
+            startDate={startDate}
+            endDate={endDate}
+            showToast={showToast}
+          />
         </div>
       )}
     </div>
