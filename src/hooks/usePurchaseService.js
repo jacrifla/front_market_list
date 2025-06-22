@@ -1,37 +1,41 @@
 import { useCallback } from 'react';
-import purchaseService from '../services/purchaseService';
+import purchaseService from '../services/PurchaseService';
 
-const usePurchaseService = () => {
-    const getTotalSpentByPeriod = async (startDate, endDate) => {
-        const res = await purchaseService.getTotalSpentByPeriod(startDate, endDate);
-        return res?.totalSpent ?? 0;
-    };
+export default function usePurchaseService() {
+    const getTotalSpentByPeriod = useCallback(
+        (startDate, endDate) => purchaseService.getTotalSpentByPeriod(startDate, endDate),
+        []
+    );
 
-    const getMostPurchasedItems = (limit) =>
-        purchaseService.getMostPurchasedItems(limit);
+    const getAvgSpendPerPurchase = useCallback(
+        (startDate, endDate) => purchaseService.getAvgSpendPerPurchase(startDate, endDate),
+        []
+    );
 
-    const getItemsPurchasedByPeriod = async (startDate, endDate) => {
-        const res = await purchaseService.getItemsPurchasedByPeriod(startDate, endDate);
-        return res?.totalQuantity ?? 0;
-    };
+    const getLargestPurchase = useCallback(
+        (startDate, endDate) => purchaseService.getLargestPurchase(startDate, endDate),
+        []
+    );
 
-    const getAvgSpendPerPurchase = async (startDate, endDate) => {
-        const res = await purchaseService.getAvgSpendPerPurchase(startDate, endDate);
-        return res?.avgSpendPerPurchase ?? 0;
-    };
+    const getAvgDailySpend = useCallback(
+        (startDate, endDate) => purchaseService.getAvgDailySpend(startDate, endDate),
+        []
+    );
 
-    const getLargestPurchase = async (startDate, endDate) => {
-        const res = await purchaseService.getLargestPurchase(startDate, endDate);
-        return typeof res === 'number' ? res : 0;
-    };
+    const getMostPurchasedItems = useCallback(
+        (limit = 5) => purchaseService.getMostPurchasedItems(limit),
+        []
+    );
 
-    const getAvgDailySpend = async (startDate, endDate) => {
-        const res = await purchaseService.getAvgDailySpend(startDate, endDate);
-        return res?.avgDailySpend ?? 0;
-    };
+    const getCategoryPurchases = useCallback(
+        (startDate, endDate) => purchaseService.getCategoryPurchases(startDate, endDate),
+        []
+    );
 
-    const getCategoryPurchases = (startDate, endDate) =>
-        purchaseService.getCategoryPurchases(startDate, endDate);
+    const getTopItemsByValue = useCallback(
+        (startDate, endDate) => purchaseService.getTopItemsByValue(startDate, endDate),
+        []
+    );
 
     const getComparisonSpent = useCallback(
         (startDate, endDate, page = 1, limit = 10) =>
@@ -39,20 +43,14 @@ const usePurchaseService = () => {
         []
     );
 
-    const getTopItemsByValue = (startDate, endDate) =>
-        purchaseService.getTopItemsByValue(startDate, endDate);
-
     return {
         getTotalSpentByPeriod,
-        getMostPurchasedItems,
-        getItemsPurchasedByPeriod,
         getAvgSpendPerPurchase,
         getLargestPurchase,
         getAvgDailySpend,
+        getMostPurchasedItems,
         getCategoryPurchases,
-        getComparisonSpent,
         getTopItemsByValue,
+        getComparisonSpent,
     };
-};
-
-export default usePurchaseService;
+}
