@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 
 export default function AddEditListItemModal({
@@ -12,6 +13,31 @@ export default function AddEditListItemModal({
   onSelectSuggestion,
   loadingListItem,
 }) {
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+
+  useEffect(() => {
+    setHighlightedIndex(-1);
+  }, [suggestions, show]);
+
+  const handleKeyDown = (e) => {
+    if (!suggestions || suggestions.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setHighlightedIndex((prev) =>
+        prev < suggestions.length - 1 ? prev + 1 : 0
+      );
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setHighlightedIndex((prev) =>
+        prev > 0 ? prev - 1 : suggestions.length - 1
+      );
+    } else if (e.key === 'Enter' && highlightedIndex >= 0) {
+      e.preventDefault();
+      onSelectSuggestion(suggestions[highlightedIndex]);
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -32,6 +58,7 @@ export default function AddEditListItemModal({
               name="itemName"
               value={formData.itemName || ''}
               onChange={(e) => onItemNameChange(e.target.value)}
+              onKeyDown={handleKeyDown}
               autoComplete="off"
               aria-autocomplete="list"
               aria-haspopup="true"
@@ -45,14 +72,12 @@ export default function AddEditListItemModal({
                 {suggestions.map((sug, idx) => (
                   <div
                     key={idx}
-                    className={`autocomplete-suggestion`}
+                    className={`autocomplete-suggestion ${
+                      idx === highlightedIndex ? 'active' : ''
+                    }`}
                     onClick={() => onSelectSuggestion(sug)}
-                    onMouseOver={(e) =>
-                      (e.currentTarget.style.backgroundColor = '#f8f9fa')
-                    }
-                    onMouseOut={(e) =>
-                      (e.currentTarget.style.backgroundColor = 'white')
-                    }
+                    onMouseOver={() => setHighlightedIndex(idx)}
+                    onMouseOut={() => setHighlightedIndex(-1)}
                   >
                     {sug.itemName}
                   </div>
