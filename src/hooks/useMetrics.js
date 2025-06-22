@@ -40,7 +40,15 @@ export default function useMetricsService() {
       categoryPurchases: categoryPurchases || [],
       topItemsByValue: topItemsByValue || [],
     };
-  }, []);
+  }, [
+    getTotalSpentByPeriod,
+    getAvgSpendPerPurchase,
+    getLargestPurchase,
+    getAvgDailySpend,
+    getMostPurchasedItems,
+    getCategoryPurchases,
+    getTopItemsByValue,
+  ]);
 
   return { fetchMetricsData };
 }
