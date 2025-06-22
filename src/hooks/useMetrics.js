@@ -14,10 +14,10 @@ export default function useMetricsService() {
 
   const fetchMetricsData = useCallback(async (start, end) => {
     const [
-      totalSpent,
-      avgSpend,
+      { totalSpent },
+      { avgSpendPerPurchase },
       largestPurchase,
-      avgDailySpend,
+      { avgDailySpend },
       mostPurchasedItems,
       categoryPurchases,
       topItemsByValue,
@@ -33,7 +33,7 @@ export default function useMetricsService() {
 
     return {
       totalSpent: Number(totalSpent) || 0,
-      avgSpend: Number(avgSpend) || 0,
+      avgSpend: Number(avgSpendPerPurchase) || 0,
       largestPurchase: Number(largestPurchase) || 0,
       avgDailySpend: Number(avgDailySpend) || 0,
       mostPurchasedItems: mostPurchasedItems || [],
