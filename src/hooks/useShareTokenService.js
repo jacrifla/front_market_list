@@ -1,4 +1,4 @@
-import shareTokenService from '../services/shareTokenService';
+import shareTokenService from '../services/ShareTokenService';
 
 const useShareTokenService = () => {
     const generateShareToken = async (listId) => {
