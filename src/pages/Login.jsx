@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import { useState } from 'react';
 import { Alert, Button, Card, Form } from 'react-bootstrap';
