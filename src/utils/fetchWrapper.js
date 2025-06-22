@@ -1,31 +1,54 @@
 import { API_BASE_URL } from './api';
 
-export async function fetchWrapper(endpoint, method = 'GET', body = null, headers = {}) {
+const DEFAULT_TIMEOUT = 15000;
+
+export async function fetchWrapper(endpoint, method = 'GET', body = null, headers = {}, timeout = DEFAULT_TIMEOUT) {
     const token = localStorage.getItem('token');
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+
+    const isFormData = body instanceof FormData;
+
     const config = {
         method,
         headers: {
-            'Content-Type': 'application/json',
+            ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
             ...headers,
-             ...(token && !headers.Authorization && { Authorization: `Bearer ${token}` }),
+            ...(token && !headers.Authorization && { Authorization: `Bearer ${token}` }),
         },
+        signal: controller.signal,
     };
 
     if (body) {
-        config.body = JSON.stringify(body);
+        config.body = isFormData ? body : JSON.stringify(body);
     }
 
     try {
         const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-        const responseData = await response.json();
+        clearTimeout(timer);
 
-        if (!response.ok || !responseData.status) {
-            throw new Error(responseData.message || "Erro desconhecido");            
+        const contentType = response.headers.get('content-type') || '';
+        const isJson = contentType.includes('application/json');
+        const responseData = isJson ? await response.json() : null;
+
+        if (!response.ok) {
+            const errorMessage = responseData?.message || `Erro HTTP ${response.status}`;
+            throw new Error(errorMessage);
         }
 
-        return responseData.data;
+        if (isJson && responseData?.status === false) {
+            throw new Error(responseData.message || 'Erro desconhecido');
+        }
+
+        return isJson ? responseData?.data ?? responseData : response;
     } catch (error) {
-        console.error(`erro na API ${method} ${endpoint}: ${error.message}`);
-        throw error;        
+        if (error.name === 'AbortError') {
+            console.error(`⏱️ Timeout: API ${method} ${endpoint}`);
+            throw new Error('Tempo de resposta excedido. Tente novamente.');
+        }
+
+        console.error(`❌ Erro na API ${method} ${endpoint}:`, error.message);
+        throw error;
     }
 }
