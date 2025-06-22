@@ -13,17 +13,22 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const validateUser = async () => {
-      if (!user || !token) {
+      const storedUser = localStorage.getItem('user');
+      const storedToken = localStorage.getItem('token');
+
+      if (!storedUser || !storedToken) {
         logout();
         setLoading(false);
         return;
       }
 
       try {
-        const validatedUser = await userService.getById(user.userId);
+        const parsedUser = JSON.parse(storedUser);
+        const validatedUser = await userService.getById(parsedUser.userId);
         setUser(validatedUser);
+        setToken(storedToken);
         localStorage.setItem('user', JSON.stringify(validatedUser));
-        localStorage.setItem('token', token);
+        localStorage.setItem('token', storedToken);
       } catch (error) {
         console.error('Usuário inválido ou token expirado:', error);
         logout();
@@ -33,7 +38,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     validateUser();
-  }, [token, user]);
+  }, []);
 
   const login = async (credential) => {
     const res = await userService.login(credential);
@@ -54,7 +59,7 @@ export const AuthProvider = ({ children }) => {
   const restoreUser = async (email) => userService.restoreUser(email);
 
   const updateUser = async (userData) => {
-    if (!user?.userId) throw new Error("Usuário não autenticado");
+    if (!user?.userId) throw new Error('Usuário não autenticado');
     const updatedUser = await userService.updateUser(user.userId, userData);
     setUser(updatedUser);
     localStorage.setItem('user', JSON.stringify(updatedUser));
