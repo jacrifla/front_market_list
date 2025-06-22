@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import categoryService from "../services/categoryService";
+import categoryService from "../services/CategoryService";
 
 const useCategoryService = () => {
     const [categories, setCategories] = useState([]);
