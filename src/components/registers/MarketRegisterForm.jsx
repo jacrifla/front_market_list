@@ -131,7 +131,7 @@ export default function MarketRegisterForm() {
                 Cancelar
               </Button>
             )}
-            <Button type="submit" variant="successMarket" disabled={loadingMarket}>
+            <Button type="submit" variant="success" disabled={loadingMarket}>
               {loadingMarket
                 ? editingId
                   ? 'Atualizando...'

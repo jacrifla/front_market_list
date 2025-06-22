@@ -130,7 +130,7 @@ export default function BrandRegisterForm() {
                 Cancelar
               </Button>
             )}
-            <Button type="submit" variant="successBrand" disabled={loadingBrand}>
+            <Button type="submit" variant="success" disabled={loadingBrand}>
               {loadingBrand
                 ? editingId
                   ? 'Atualizando...'

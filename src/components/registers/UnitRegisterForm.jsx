@@ -134,7 +134,7 @@ export default function UnitRegisterForm() {
                 Cancelar
               </Button>
             )}
-            <Button type="submit" variant="successUnit" disabled={loadingUnit}>
+            <Button type="submit" variant="success" disabled={loadingUnit}>
               {loadingUnit
                 ? editingId
                   ? 'Atualizando...'

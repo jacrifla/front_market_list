@@ -150,7 +150,7 @@ export default function CategoryRegisterForm() {
                 Cancelar
               </Button>
             )}
-            <Button type="submit" variant="successCategory">
+            <Button type="submit" variant="success">
               {editingId ? 'Atualizar' : 'Salvar'}
             </Button>
           </div>
