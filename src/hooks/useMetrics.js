@@ -26,7 +26,7 @@ export default function useMetricsService() {
       getAvgSpendPerPurchase(start, end),
       getLargestPurchase(start, end),
       getAvgDailySpend(start, end),
-      getMostPurchasedItems(5),
+      getMostPurchasedItems(start, end, 50),
       getCategoryPurchases(start, end),
       getTopItemsByValue(start, end),
     ]);

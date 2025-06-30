@@ -23,7 +23,7 @@ export default function usePurchaseService() {
     );
 
     const getMostPurchasedItems = useCallback(
-        (limit = 5) => purchaseService.getMostPurchasedItems(limit),
+        (startDate, endDate, limit = 5) => purchaseService.getMostPurchasedItems(startDate, endDate, limit),
         []
     );
 
