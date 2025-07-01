@@ -89,24 +89,28 @@ const useHomeLogic = () => {
         brands,
         fetchBrands,
         loading: loadingBrands,
+        createBrand,
     } = useBrandService();
 
     const {
         categories,
         fetchCategorys,
         loading: loadingCategories,
+        createCategory,
     } = useCategoryService();
 
     const {
         units,
         fetchUnits,
         loading: loadingUnits,
+        createUnit,
     } = useUnitService();
 
     const {
         markets,
         fetchMarkets,
         loading: loadingMarkets,
+        createMarket,
     } = useMarketService();
 
     useEffect(() => {
@@ -115,6 +119,22 @@ const useHomeLogic = () => {
         fetchUnits();
         fetchMarkets();
     }, [fetchBrands, fetchCategorys, fetchUnits, fetchMarkets]);
+
+    const handleAddBrand = async (name) => {
+        await createBrand(name);
+    };
+
+    const handleAddCategory = async (name) => {
+        await createCategory(name);
+    };
+
+    const handleAddUnit = async (name) => {
+        await createUnit(name);
+    };
+
+    const handleAddMarket = async (name) => {
+        await createMarket(name);
+    };
 
     const selectedList = lists.find((list) => list.listId === selectedListId) || null;
     const unmarkedItems = listItems.filter(item => item.listId === pendingListIdToComplete && !item.purchasedAt);
@@ -592,6 +612,10 @@ const useHomeLogic = () => {
         loadingItem,
         closeSelectedList,
         unmarkedItems,
+        handleAddBrand,
+        handleAddCategory,
+        handleAddUnit,
+        handleAddMarket,
     };
 };
 
