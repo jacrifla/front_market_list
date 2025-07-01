@@ -89,7 +89,11 @@ export default function Home() {
     handleConfirmOnlyList,
     closeSelectedList,
     unmarkedItems,
-  } = useHomeLogic();  
+    handleAddBrand,
+    handleAddCategory,
+    handleAddUnit,
+    handleAddMarket,
+  } = useHomeLogic();
 
   useToastMessage(null, errorList);
   useToastMessage(null, errorItem);
@@ -216,6 +220,10 @@ export default function Home() {
         categories={categories}
         units={units}
         markets={markets}
+        onAddBrand={handleAddBrand}
+        onAddCategory={handleAddCategory}
+        onAddUnit={handleAddUnit}
+        onAddMarket={handleAddMarket}
       />
 
       <PurchaseDateModal
