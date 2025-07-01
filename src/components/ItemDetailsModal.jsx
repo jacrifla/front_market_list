@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Modal, Button, Form, Spinner } from 'react-bootstrap';
+import QuickAddModal from './QuickAddModal'; // ajuste o caminho conforme necessário
 
 export default function ItemDetailsModal({
   show,
@@ -10,6 +11,10 @@ export default function ItemDetailsModal({
   categories = [],
   units = [],
   markets = [],
+  onAddBrand,
+  onAddCategory,
+  onAddUnit,
+  onAddMarket,
 }) {
   const [formData, setFormData] = useState({
     brandId: '',
@@ -20,6 +25,11 @@ export default function ItemDetailsModal({
   });
 
   const [isSaving, setIsSaving] = useState(false);
+
+  const [showAddBrand, setShowAddBrand] = useState(false);
+  const [showAddCategory, setShowAddCategory] = useState(false);
+  const [showAddUnit, setShowAddUnit] = useState(false);
+  const [showAddMarket, setShowAddMarket] = useState(false);
 
   useEffect(() => {
     if (show) {
@@ -59,123 +69,190 @@ export default function ItemDetailsModal({
   };
 
   return (
-    <Modal show={show} onHide={onHide} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>
-          Informações do item:{' '}
-          <strong>{item?.itemName || 'Item desconhecido'}</strong>
-        </Modal.Title>
-      </Modal.Header>
+    <>
+      <Modal show={show} onHide={onHide} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Informações do item:{' '}
+            <strong>{item?.itemName || 'Item desconhecido'}</strong>
+          </Modal.Title>
+        </Modal.Header>
 
-      <Modal.Body>
-        <Form>
-          <Form.Group className="mb-3">
-            <Form.Label>Categoria</Form.Label>
-            <Form.Select
-              name="categoryId"
-              value={formData.categoryId}
-              onChange={handleChange}
-            >
-              <option value="">Selecione</option>
-              {categories.map((cat) => (
-                <option key={cat.categoryId} value={cat.categoryId}>
-                  {cat.categoryName}
-                </option>
-              ))}
-            </Form.Select>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <div className="d-flex justify-content-between align-items-center">
+                <Form.Label>Categoria</Form.Label>
+                <Button
+                  variant="outline-primary"
+                  size="sm"
+                  onClick={() => setShowAddCategory(true)}
+                >
+                  +
+                </Button>
+              </div>
+              <Form.Select
+                name="categoryId"
+                value={formData.categoryId}
+                onChange={handleChange}
+              >
+                <option value="">Selecione</option>
+                {categories.map((cat) => (
+                  <option key={cat.categoryId} value={cat.categoryId}>
+                    {cat.categoryName}
+                  </option>
+                ))}
+              </Form.Select>
 
-            {formData.categoryId && (
-              <Form.Text className="text-muted mt-1 d-block">
-                {categories.find(
-                  (cat) =>
-                    String(cat.categoryId) === String(formData.categoryId)
-                )?.description || 'Sem descrição disponível.'}
-              </Form.Text>
+              {formData.categoryId && (
+                <Form.Text className="text-muted mt-1 d-block">
+                  {categories.find(
+                    (cat) =>
+                      String(cat.categoryId) === String(formData.categoryId)
+                  )?.description || 'Sem descrição disponível.'}
+                </Form.Text>
+              )}
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <div className="d-flex justify-content-between align-items-center">
+                <Form.Label>Marca</Form.Label>
+                <Button
+                  variant="outline-primary"
+                  size="sm"
+                  onClick={() => setShowAddBrand(true)}
+                >
+                  +
+                </Button>
+              </div>
+              <Form.Select
+                name="brandId"
+                value={formData.brandId}
+                onChange={handleChange}
+              >
+                <option value="">Selecione</option>
+                {brands.map((brand) => (
+                  <option key={brand.brandId} value={brand.brandId}>
+                    {brand.brandName}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <div className="d-flex justify-content-between align-items-center">
+                <Form.Label>Unidade de medida</Form.Label>
+                <Button
+                  variant="outline-primary"
+                  size="sm"
+                  onClick={() => setShowAddUnit(true)}
+                >
+                  +
+                </Button>
+              </div>
+              <Form.Select
+                name="unitId"
+                value={formData.unitId}
+                onChange={handleChange}
+              >
+                <option value="">Selecione</option>
+                {units.map((unit) => (
+                  <option key={unit.unitId} value={unit.unitId}>
+                    {unit.unitName}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Código de barras</Form.Label>
+              <Form.Control
+                type="text"
+                name="barcode"
+                value={formData.barcode}
+                onChange={handleChange}
+                placeholder="Digite ou escaneie"
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <div className="d-flex justify-content-between align-items-center">
+                <Form.Label>Mercado</Form.Label>
+                <Button
+                  variant="outline-primary"
+                  size="sm"
+                  onClick={() => setShowAddMarket(true)}
+                >
+                  +
+                </Button>
+              </div>
+              <Form.Select
+                name="marketId"
+                value={formData.marketId}
+                onChange={handleChange}
+              >
+                <option value="">Selecione</option>
+                {markets.map((market) => (
+                  <option key={market.marketId} value={market.marketId}>
+                    {market.marketName}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={onHide} disabled={isSaving}>
+            Cancelar
+          </Button>
+          <Button variant="success" onClick={handleSubmit} disabled={isSaving}>
+            {isSaving ? (
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />{' '}
+                Salvando...
+              </>
+            ) : (
+              'Salvar'
             )}
-          </Form.Group>
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Marca</Form.Label>
-            <Form.Select
-              name="brandId"
-              value={formData.brandId}
-              onChange={handleChange}
-            >
-              <option value="">Selecione</option>
-              {brands.map((brand) => (
-                <option key={brand.brandId} value={brand.brandId}>
-                  {brand.brandName}
-                </option>
-              ))}
-            </Form.Select>
-          </Form.Group>
+      {/* Modais de criação rápida */}
+      <QuickAddModal
+        show={showAddBrand}
+        onHide={() => setShowAddBrand(false)}
+        onSave={onAddBrand}
+        label="marca"
+      />
 
-          <Form.Group className="mb-3">
-            <Form.Label>Unidade de medida</Form.Label>
-            <Form.Select
-              name="unitId"
-              value={formData.unitId}
-              onChange={handleChange}
-            >
-              <option value="">Selecione</option>
-              {units.map((unit) => (
-                <option key={unit.unitId} value={unit.unitId}>
-                  {unit.unitName}
-                </option>
-              ))}
-            </Form.Select>
-          </Form.Group>
+      <QuickAddModal
+        show={showAddCategory}
+        onHide={() => setShowAddCategory(false)}
+        onSave={onAddCategory}
+        label="categoria"
+      />
 
-          <Form.Group className="mb-3">
-            <Form.Label>Código de barras</Form.Label>
-            <Form.Control
-              type="text"
-              name="barcode"
-              value={formData.barcode}
-              onChange={handleChange}
-              placeholder="Digite ou escaneie"
-            />
-          </Form.Group>
+      <QuickAddModal
+        show={showAddUnit}
+        onHide={() => setShowAddUnit(false)}
+        onSave={onAddUnit}
+        label="unidade"
+      />
 
-          <Form.Group className="mb-3">
-            <Form.Label>Mercado</Form.Label>
-            <Form.Select
-              name="marketId"
-              value={formData.marketId}
-              onChange={handleChange}
-            >
-              <option value="">Selecione</option>
-              {markets.map((market) => (
-                <option key={market.marketId} value={market.marketId}>
-                  {market.marketName}
-                </option>
-              ))}
-            </Form.Select>
-          </Form.Group>
-        </Form>
-      </Modal.Body>
-
-      <Modal.Footer>
-        <Button variant="secondary" onClick={onHide} disabled={isSaving}>
-          Cancelar
-        </Button>
-        <Button variant="success" onClick={handleSubmit} disabled={isSaving}>
-          {isSaving ? (
-            <>
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />{' '}
-              Salvando...
-            </>
-          ) : (
-            'Salvar'
-          )}
-        </Button>
-      </Modal.Footer>
-    </Modal>
+      <QuickAddModal
+        show={showAddMarket}
+        onHide={() => setShowAddMarket(false)}
+        onSave={onAddMarket}
+        label="mercado"
+      />
+    </>
   );
 }
