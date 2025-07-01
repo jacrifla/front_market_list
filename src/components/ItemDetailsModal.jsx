@@ -81,28 +81,28 @@ export default function ItemDetailsModal({
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3">
-              <div className="d-flex justify-content-between align-items-center">
-                <Form.Label>Categoria</Form.Label>
+              <Form.Label>Categoria</Form.Label>
+              <div className="d-flex align-items-center gap-2">
+                <Form.Select
+                  name="categoryId"
+                  value={formData.categoryId}
+                  onChange={handleChange}
+                  className="flex-grow-1"
+                >
+                  <option value="">Selecione</option>
+                  {categories.map((cat) => (
+                    <option key={cat.categoryId} value={cat.categoryId}>
+                      {cat.categoryName}
+                    </option>
+                  ))}
+                </Form.Select>
                 <Button
                   variant="outline-primary"
-                  size="sm"
                   onClick={() => setShowAddCategory(true)}
                 >
                   +
                 </Button>
               </div>
-              <Form.Select
-                name="categoryId"
-                value={formData.categoryId}
-                onChange={handleChange}
-              >
-                <option value="">Selecione</option>
-                {categories.map((cat) => (
-                  <option key={cat.categoryId} value={cat.categoryId}>
-                    {cat.categoryName}
-                  </option>
-                ))}
-              </Form.Select>
 
               {formData.categoryId && (
                 <Form.Text className="text-muted mt-1 d-block">
@@ -115,53 +115,53 @@ export default function ItemDetailsModal({
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <div className="d-flex justify-content-between align-items-center">
-                <Form.Label>Marca</Form.Label>
+              <Form.Label>Marca</Form.Label>
+              <div className="d-flex align-items-center gap-2">
+                <Form.Select
+                  name="brandId"
+                  value={formData.brandId}
+                  onChange={handleChange}
+                  className="flex-grow-1"
+                >
+                  <option value="">Selecione</option>
+                  {brands.map((brand) => (
+                    <option key={brand.brandId} value={brand.brandId}>
+                      {brand.brandName}
+                    </option>
+                  ))}
+                </Form.Select>
                 <Button
                   variant="outline-primary"
-                  size="sm"
                   onClick={() => setShowAddBrand(true)}
                 >
                   +
                 </Button>
               </div>
-              <Form.Select
-                name="brandId"
-                value={formData.brandId}
-                onChange={handleChange}
-              >
-                <option value="">Selecione</option>
-                {brands.map((brand) => (
-                  <option key={brand.brandId} value={brand.brandId}>
-                    {brand.brandName}
-                  </option>
-                ))}
-              </Form.Select>
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <div className="d-flex justify-content-between align-items-center">
-                <Form.Label>Unidade de medida</Form.Label>
+              <Form.Label>Unidade de medida</Form.Label>
+              <div className="d-flex align-items-center gap-2">
+                <Form.Select
+                  name="unitId"
+                  value={formData.unitId}
+                  onChange={handleChange}
+                  className="flex-grow-1"
+                >
+                  <option value="">Selecione</option>
+                  {units.map((unit) => (
+                    <option key={unit.unitId} value={unit.unitId}>
+                      {unit.unitName}
+                    </option>
+                  ))}
+                </Form.Select>
                 <Button
                   variant="outline-primary"
-                  size="sm"
                   onClick={() => setShowAddUnit(true)}
                 >
                   +
                 </Button>
               </div>
-              <Form.Select
-                name="unitId"
-                value={formData.unitId}
-                onChange={handleChange}
-              >
-                <option value="">Selecione</option>
-                {units.map((unit) => (
-                  <option key={unit.unitId} value={unit.unitId}>
-                    {unit.unitName}
-                  </option>
-                ))}
-              </Form.Select>
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -176,28 +176,28 @@ export default function ItemDetailsModal({
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <div className="d-flex justify-content-between align-items-center">
-                <Form.Label>Mercado</Form.Label>
+              <Form.Label>Mercado</Form.Label>
+              <div className="d-flex align-items-center gap-2">
+                <Form.Select
+                  name="marketId"
+                  value={formData.marketId}
+                  onChange={handleChange}
+                  className="flex-grow-1"
+                >
+                  <option value="">Selecione</option>
+                  {markets.map((market) => (
+                    <option key={market.marketId} value={market.marketId}>
+                      {market.marketName}
+                    </option>
+                  ))}
+                </Form.Select>
                 <Button
                   variant="outline-primary"
-                  size="sm"
                   onClick={() => setShowAddMarket(true)}
                 >
                   +
                 </Button>
               </div>
-              <Form.Select
-                name="marketId"
-                value={formData.marketId}
-                onChange={handleChange}
-              >
-                <option value="">Selecione</option>
-                {markets.map((market) => (
-                  <option key={market.marketId} value={market.marketId}>
-                    {market.marketName}
-                  </option>
-                ))}
-              </Form.Select>
             </Form.Group>
           </Form>
         </Modal.Body>
@@ -212,7 +212,6 @@ export default function ItemDetailsModal({
                 <Spinner
                   as="span"
                   animation="border"
-                  size="sm"
                   role="status"
                   aria-hidden="true"
                 />{' '}
