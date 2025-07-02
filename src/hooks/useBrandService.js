@@ -26,12 +26,12 @@ const useBrandService = () => {
         }
     }, []);
 
-    const createBrand = async (brandName) => {
+    const createBrand = async (name) => {
         setLoading(true);
         clearMessages();
 
         try {
-            await brandService.createBrand(brandName);
+            await brandService.createBrand(name);
             await fetchBrands();
             setSuccess("Marca criada com sucesso!");
         } catch (error) {
@@ -41,12 +41,12 @@ const useBrandService = () => {
         }
     };
 
-    const updateBrand = async (brandId, brandName) => {
+    const updateBrand = async (id, name) => {
         setLoading(true);
         clearMessages();
 
         try {
-            await brandService.updateBrand(brandId, brandName);
+            await brandService.updateBrand(id, name);
             await fetchBrands();
             setSuccess("Marca atualizada com sucesso!");
         } catch (error) {
@@ -56,13 +56,13 @@ const useBrandService = () => {
         }
     };
 
-    const deleteBrand = async (brandId) => {
+    const deleteBrand = async (id) => {
         setLoading(true);
         clearMessages();
 
         try {
-            await brandService.deleteBrand(brandId);
-            setBrands(prev => prev.filter(brand => brand.brandId !== brandId));
+            await brandService.deleteBrand(id);
+            setBrands(prev => prev.filter(brand => brand.id !== id));
             setSuccess("Marca deletada com sucesso!");
         } catch (error) {
             setError(`Erro ao deletar marca. ${error}`);

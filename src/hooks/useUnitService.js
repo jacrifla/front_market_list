@@ -26,12 +26,12 @@ const useUnitService = () => {
         }
     }, []);
 
-    const createUnit = async (unitName) => {
+    const createUnit = async (name) => {
         setLoading(true);
         clearMessages();
 
         try {
-            await unitService.createUnit(unitName);
+            await unitService.createUnit(name);
             await fetchUnits();
             setSuccess("Unidade criada com sucesso!");
         } catch (error) {
@@ -41,12 +41,12 @@ const useUnitService = () => {
         }
     };
 
-    const updateUnit = async (unitId, unitName) => {
+    const updateUnit = async (id, name) => {
         setLoading(true);
         clearMessages();
 
         try {
-            await unitService.updateUnit(unitId, unitName);
+            await unitService.updateUnit(id, name);
             await fetchUnits();
             setSuccess("Unidade atualizada com sucesso!");
         } catch (error) {
@@ -56,13 +56,13 @@ const useUnitService = () => {
         }
     };
 
-    const deleteUnit = async (unitId) => {
+    const deleteUnit = async (id) => {
         setLoading(true);
         clearMessages();
 
         try {
-            await unitService.deleteUnit(unitId);
-            setUnits(prev => prev.filter(unit => unit.unitId !== unitId));
+            await unitService.deleteUnit(id);
+            setUnits(prev => prev.filter(unit => unit.id !== id));
             setSuccess("Unidade deletada com sucesso!");
         } catch (error) {
             setError(`Erro ao deletar unidade. ${error}`);

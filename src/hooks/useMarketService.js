@@ -26,12 +26,12 @@ const useMarketService = () => {
         }
     }, []);
 
-    const createMarket = async (marketName) => {
+    const createMarket = async (name) => {
         setLoading(true);
         clearMessages();
 
         try {
-            await marketService.createMarket(marketName);
+            await marketService.createMarket(name);
             await fetchMarkets();
             setSuccess("Mercado criado com sucesso!");
         } catch (error) {
@@ -41,12 +41,12 @@ const useMarketService = () => {
         }
     };
 
-    const updateMarket = async (marketId, marketName) => {
+    const updateMarket = async (id, name) => {
         setLoading(true);
         clearMessages();
 
         try {
-            await marketService.updateMarket(marketId, marketName);
+            await marketService.updateMarket(id, name);
             await fetchMarkets();
             setSuccess("Mercado atualizado com sucesso!");
         } catch (error) {
@@ -56,13 +56,13 @@ const useMarketService = () => {
         }
     };
 
-    const deleteMarket = async (marketId) => {
+    const deleteMarket = async (id) => {
         setLoading(true);
         clearMessages();
 
         try {
-            await marketService.deleteMarket(marketId);
-            setMarkets(prev => prev.filter(Market => Market.marketId !== marketId));
+            await marketService.deleteMarket(id);
+            setMarkets(prev => prev.filter(Market => Market.id !== id));
             setSuccess("Mercado deletado com sucesso!");
         } catch (error) {
             setError(`Erro ao deletar mercado. ${error}`);

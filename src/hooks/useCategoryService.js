@@ -41,12 +41,12 @@ const useCategoryService = () => {
         }
     };
 
-    const updateCategory = async (categoryId, categoryData) => {
+    const updateCategory = async (id, categoryData) => {
         setLoading(true);
         clearMessages();
 
         try {
-            await categoryService.updateCategory(categoryId, categoryData);
+            await categoryService.updateCategory(id, categoryData);
             await fetchCategorys();
             setSuccess("Categoria atualizada com sucesso!");
         } catch (error) {
@@ -56,13 +56,13 @@ const useCategoryService = () => {
         }
     };
 
-    const deleteCategory = async (categoryId) => {
+    const deleteCategory = async (id) => {
         setLoading(true);
         clearMessages();
 
         try {
-            await categoryService.deleteCategory(categoryId);
-            setCategories(prev => prev.filter(category => category.categoryId !== categoryId));
+            await categoryService.deleteCategory(id);
+            setCategories(prev => prev.filter(category => category.id !== id));
             setSuccess("Categoria deletada com sucesso!");
         } catch (error) {
             setError(`Erro ao deletar categoria. ${error}`);
