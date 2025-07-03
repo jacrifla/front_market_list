@@ -9,7 +9,7 @@ const brandService = {
 
     deleteBrand: async (id) => fetchWrapper(`${endpointBase}/${id}`, 'DELETE'),
 
-    getAllBrands: async () => fetchWrapper(`${endpointBase}/all`),
+    getAllBrands: async () => fetchWrapper(`${endpointBase}`),
 };
 
 export default brandService;

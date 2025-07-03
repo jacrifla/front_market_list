@@ -9,7 +9,7 @@ const categoryService = {
 
     deleteCategory: async (categoryId) => fetchWrapper(`${endpointBase}/${categoryId}`, 'DELETE'),
 
-    getAllCategorys: async () => fetchWrapper(`${endpointBase}/all`),
+    getAllCategorys: async () => fetchWrapper(`${endpointBase}`),
 };
 
 export default categoryService;
