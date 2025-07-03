@@ -52,6 +52,14 @@ const useHomeLogic = () => {
         itemType: 'common',
     });
 
+    const [itemDetailFormData, setItemDetailFormData] = useState({
+        categoryId: null,
+        brandId: null,
+        unitId: null,
+        marketId: null,
+        barcode: '',
+    });
+
     const { generateShareToken } = useShareTokenService();
 
     const {
@@ -450,12 +458,11 @@ const useHomeLogic = () => {
     };
 
     const handleMarkAsBoughtClick = (item) => {
-        setSelectedItem(item);
-        if (item.itemType === 'common') {
-            handleDontSave();
-        } else {
-            setIsConfirmSaveModalOpen(true);
-        }
+        const fullItem = itemSuggestions.find((sug) => sug.itemId === item.itemId);
+        const enrichedItem = { ...item, ...fullItem, marketId: lastUsedMarketId };
+
+        setSelectedItem(enrichedItem);
+        setIsSaveItemModalOpen(true);
     };
 
     const handleCancel = () => {
@@ -485,6 +492,15 @@ const useHomeLogic = () => {
 
     const handleConfirmSave = () => {
         setIsConfirmSaveModalOpen(false);
+        if (selectedItem) {
+            setItemDetailFormData({
+                categoryId: selectedItem.categoryId || null,
+                brandId: selectedItem.brandId || null,
+                unitId: selectedItem.unitId || null,
+                marketId: selectedItem.marketId || null,
+                barcode: selectedItem.barcode || '',
+            });
+        }
         setIsSaveItemModalOpen(true);
     };
 
@@ -576,6 +592,7 @@ const useHomeLogic = () => {
         handleDontSave,
         handleConfirmSave,
         handleSubmitItemInfo,
+        itemDetailFormData,
 
         brands,
         loadingBrands,

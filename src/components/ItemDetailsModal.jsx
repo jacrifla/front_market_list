@@ -30,19 +30,19 @@ export default function ItemDetailsModal({
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [showAddUnit, setShowAddUnit] = useState(false);
   const [showAddMarket, setShowAddMarket] = useState(false);
-
+  
   useEffect(() => {
-    if (show) {
+    if (show && item) {
       setFormData({
-        brandId: '',
-        categoryId: '',
-        unitId: '',
-        barcode: '',
-        marketId: '',
+        brandId: item.brandId || '',
+        categoryId: item.categoryId || '',
+        unitId: item.unitId || '',
+        barcode: item.barcode || '',
+        marketId: item.marketId || '',
       });
       setIsSaving(false);
     }
-  }, [show]);
+  }, [show, item]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -211,6 +211,7 @@ export default function ItemDetailsModal({
               <>
                 <Spinner
                   as="span"
+                  size='sm'
                   animation="border"
                   role="status"
                   aria-hidden="true"
