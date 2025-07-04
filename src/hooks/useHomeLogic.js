@@ -175,36 +175,9 @@ const useHomeLogic = () => {
     }, []);
 
 
+    // ========== LISTAS ==========
 
-    const handleItemNameChange = async (name) => {
-        if (itemFormData.itemType === 'common') return;
-        setItemFormData((prev) => ({
-            ...prev,
-            itemName: name,
-            itemType: 'custom',
-            itemId: null,
-        }));
-
-        if (name.length >= 1) {
-            await searchItemByBarcodeOrName(name);
-            setSuggestions(itemSuggestions);
-        } else {
-            setSuggestions([]);
-        }
-    };
-
-    const handleSelectSuggestion = (item) => {
-        setItemFormData((prev) => ({
-            ...prev,
-            itemName: item.itemName,
-            itemType: 'common',
-            itemId: item.itemId,
-        }));
-        setSuggestions([]);
-    };
-
-
-    // Listas
+    // Seleciona uma lista no sidebar
     const handleSelectList = useCallback(async (listId) => {
         setSelectedListId(listId);
         await fetchItemsByListId(listId);
@@ -212,12 +185,14 @@ const useHomeLogic = () => {
         setIsSidebarOpen(false);
     }, [fetchItemsByListId]);
 
+    // Abre o modal de criação de nova lista
     const handleAddList = () => {
         setModalMode('add');
         setModalInputValue('');
         setIsModalOpen(true);
     };
 
+    // Abre o modal para editar o nome da lista
     const handleEditList = (list) => {
         setModalMode('edit');
         setModalInputValue(list.listName);
@@ -225,6 +200,7 @@ const useHomeLogic = () => {
         setIsModalOpen(true);
     };
 
+    // Confirma criação ou edição da lista
     const handleModalConfirm = async () => {
         if (!modalInputValue.trim()) return;
 
@@ -240,14 +216,14 @@ const useHomeLogic = () => {
         }
     };
 
+    // Fecha a lista selecionada
     function closeSelectedList() {
         setSelectedListId(null);
         setSelectedItem(null);
         setSuggestions([]);
     }
 
-
-    // Excluir Lista
+    // Deleta uma lista
     const handleDeleteList = async (listId) => {
         await deleteList(listId);
         if (selectedListId === listId) {
@@ -257,7 +233,7 @@ const useHomeLogic = () => {
         }
     };
 
-    // Compartilhar a lista
+    // Compartilha uma lista
     const handleShareList = async (listId) => {
         try {
             const token = await generateShareToken(listId);
@@ -273,6 +249,7 @@ const useHomeLogic = () => {
         }
     };
 
+    // Inicia processo de concluir a lista com data
     const handleStartCompleteList = (listId) => {
         const existingDate = purchaseDateByListId[listId] || localStorage.getItem('lastUsedPurchaseDate');
 
@@ -289,6 +266,7 @@ const useHomeLogic = () => {
         }
     };
 
+    // Confirma a data de compra e abre confirmação final
     const handleConfirmPurchaseDate = (date) => {
         setPurchaseDateByListId((prev) => ({
             ...prev,
@@ -300,6 +278,7 @@ const useHomeLogic = () => {
         setShowCompleteListConfirmModal(true);
     };
 
+    // Conclui apenas a lista (sem marcar os itens)
     const handleConfirmOnlyList = async () => {
         if (!pendingListIdToComplete) return;
 
@@ -308,6 +287,7 @@ const useHomeLogic = () => {
         setPendingListIdToComplete(null);
     };
 
+    // Conclui lista e marca os itens como comprados
     const handleConfirmWithItems = async () => {
         const listId = pendingListIdToComplete;
         const date = purchaseDateByListId[listId];
@@ -339,6 +319,7 @@ const useHomeLogic = () => {
         setPendingListIdToComplete(null);
     };
 
+    // Finaliza a lista e salva o total
     const handleCompleteList = async (listId) => {
         const totalForList = listItems
             .filter(item => item.listId === listId)
@@ -357,7 +338,7 @@ const useHomeLogic = () => {
         setIsConfirmDeleteModalOpen(true);
     };
 
-    // Confirmacao de Exclusao
+    // Confirma exclusão da lista
     const handleConfirmDelete = async () => {
         if (selectedListId) {
             await handleDeleteList(selectedListId);
@@ -366,19 +347,51 @@ const useHomeLogic = () => {
         }
     };
 
-    // Cancelamento da exclusao
+    // Cancela modal de exclusão
     const handleCancelDelete = () => {
         setSelectedListId(null);
         setIsConfirmDeleteModalOpen(false);
     };
 
-    //   Item
+    // ========== ITENS ==========
+
+    // Atualiza o nome do item digitado e busca sugestões se o tipo for custom
+    const handleItemNameChange = async (name) => {
+        if (itemFormData.itemType === 'common') return;
+        setItemFormData((prev) => ({
+            ...prev,
+            itemName: name,
+            itemType: 'custom',
+            itemId: null,
+        }));
+
+        if (name.length >= 1) {
+            await searchItemByBarcodeOrName(name);
+            setSuggestions(itemSuggestions);
+        } else {
+            setSuggestions([]);
+        }
+    };
+
+    // Ao selecionar uma sugestão, atualiza os dados para o tipo common
+    const handleSelectSuggestion = (item) => {
+        setItemFormData((prev) => ({
+            ...prev,
+            itemName: item.itemName,
+            itemType: 'common',
+            itemId: item.itemId,
+        }));
+        setSuggestions([]);
+    };
+
+    // Abre o modal para adicionar item novo
     const openAddItemModal = () => {
         setItemModalMode('add');
         setItemFormData({ itemName: '', quantity: 1, price: 0, itemType: 'custom', itemId: null });
         setIsItemModalOpen(true);
     };
 
+    // Abre o modal para editar um item existente
     const openEditItemModal = () => {
         if (!selectedItem) return;
 
@@ -397,6 +410,7 @@ const useHomeLogic = () => {
         setIsItemModalOpen(true);
     };
 
+    // Confirma adição ou edição de item
     const handleItemModalConfirm = async () => {
         const { itemName, quantity, price, itemType, itemId } = itemFormData;
 
@@ -429,6 +443,7 @@ const useHomeLogic = () => {
         await fetchItemsByListId(selectedListId);
     };
 
+    // Quando o item é "comprado" for clicado
     const handleCheckItem = (item) => {
         const listDate = purchaseDateByListId[item.listId];
 
@@ -441,6 +456,7 @@ const useHomeLogic = () => {
         handleMarkAsBoughtClick(item);
     };
 
+    // Seleciona data de compra e marca item
     const handlePurchaseDateSelected = (date) => {
         if (!pendingMarkAsBought) return;
 
@@ -457,6 +473,7 @@ const useHomeLogic = () => {
         setIsPurchaseDateModalOpen(false);
     };
 
+    // Abre modal para salvar os dados do item
     const handleMarkAsBoughtClick = (item) => {
         const fullItem = itemSuggestions.find((sug) => sug.itemId === item.itemId);
         const enrichedItem = { ...item, ...fullItem, marketId: lastUsedMarketId };
@@ -465,12 +482,14 @@ const useHomeLogic = () => {
         setIsSaveItemModalOpen(true);
     };
 
+    // Fecha qualquer modal relacionado ao item
     const handleCancel = () => {
         setSelectedItem(null);
         setIsConfirmSaveModalOpen(false);
         setIsSaveItemModalOpen(false);
     };
 
+    // Marca item como comprado sem salvar info extra
     const handleDontSave = async () => {
         if (!selectedItem) return;
 
@@ -490,6 +509,7 @@ const useHomeLogic = () => {
         handleCancel();
     };
 
+    // Confirma que quer salvar os dados do item comprado
     const handleConfirmSave = () => {
         setIsConfirmSaveModalOpen(false);
         if (selectedItem) {
@@ -504,6 +524,7 @@ const useHomeLogic = () => {
         setIsSaveItemModalOpen(true);
     };
 
+    // Busca a data de compra para a lista selecionada
     const getPurchaseDateForList = (listId) => {
         // Retorna a data específica da lista, se já tiver sido definida
         if (purchaseDateByListId[listId]) return purchaseDateByListId[listId];
@@ -514,6 +535,7 @@ const useHomeLogic = () => {
     };
 
 
+    // Salva os dados extras do item comprado
     const handleSubmitItemInfo = async (data) => {
         if (!selectedItem) return;
 
@@ -537,7 +559,7 @@ const useHomeLogic = () => {
         handleCancel();
     };
 
-    // Deletar item
+    // Deleta item da lista
     const handleDeleteItem = async () => {
         if (!selectedItem) return;
         await deleteListItem(selectedItem.itemListId, selectedListId);
