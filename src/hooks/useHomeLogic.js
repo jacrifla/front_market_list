@@ -313,7 +313,7 @@ const useHomeLogic = () => {
         const date = purchaseDateByListId[listId];
 
         const unmarkedItems = listItems.filter(
-            (item) => item.listId === listId && !item.bought
+            (item) => item.listId === listId && !item.purchaseDate
         );
 
         await Promise.all(
