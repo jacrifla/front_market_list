@@ -26,21 +26,21 @@ const useListService = (userId) => {
         clearMessages();
 
         try {
-            const data = await listService.fetchListsByUserId(userId);
+            const data = await listService.fetchListsByUserId();
             setLists(data);
         } catch (error) {
             setError('Erro ao carregar as listas. ', error);
         } finally {
             setLoading(false);
         }
-    }, [userId]);
+    }, []);
 
     const createList = async (listName) => {
         setLoading(true);
         clearMessages();
 
         try {
-            const newList = await listService.createList(userId, listName);
+            const newList = await listService.createList({ listName });
             await fetchLists();
             setSuccess('Lista criada com sucesso.');
             return newList;
@@ -82,12 +82,12 @@ const useListService = (userId) => {
         }
     };
 
-    const markListCompleted = async ({ listId, userId, totalAmount, purchaseDate }) => {        
+    const markListCompleted = async ({ listId, totalAmount, purchaseDate }) => {        
         setLoading(true);
         clearMessages();
 
         try {
-            await listService.markListCompleted({ listId, userId, totalAmount, purchaseDate });
+            await listService.markListCompleted({ listId, totalAmount, purchaseDate });
             await fetchLists();
             setSuccess('Lista marcada com sucesso')
         } catch (error) {

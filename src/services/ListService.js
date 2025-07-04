@@ -3,7 +3,7 @@ import { fetchWrapper } from "../utils/fetchWrapper";
 const endpointBase = '/list'
 
 const listService = {
-    fetchListsByUserId: async (userId) => await fetchWrapper(`${endpointBase}/${userId}`),
+    fetchListsByUserId: async () => await fetchWrapper(`${endpointBase}/me`),
 
     createList: async (data) =>
         await fetchWrapper(`${endpointBase}`, 'POST', data),
