@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useContext } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import useListService from '../hooks/useListService';
 import useListItemService from '../hooks/useListItemService';
 import useShareTokenService from './useShareTokenService';
@@ -7,12 +7,8 @@ import useBrandService from './useBrandService';
 import useCategoryService from './useCategoryService';
 import useUnitService from './useUnitService';
 import useMarketService from './useMarketService';
-import { AuthContext } from '../contexts/AuthContext';
 
 const useHomeLogic = () => {
-    const { user } = useContext(AuthContext);
-    const userId = user?.userId;
-
     const [total, setTotal] = useState(0);
     const [selectedListId, setSelectedListId] = useState(null);
     const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
@@ -72,7 +68,7 @@ const useHomeLogic = () => {
         successList,
         errorList,
         loadingList,
-    } = useListService(userId);
+    } = useListService();
 
     const {
         searchItemByBarcodeOrName,
@@ -306,7 +302,6 @@ const useHomeLogic = () => {
         await Promise.all(
             itemsToMark.map(item =>
                 markItemAsBought({
-                    userId,
                     itemId: item.itemId,
                     listId: item.listId,
                     itemListId: item.itemListId,
@@ -336,7 +331,6 @@ const useHomeLogic = () => {
         }
         await markListCompleted({
             listId,
-            userId,
             totalAmount: total,
             purchaseDate: purchaseDateByListId[listId] || null
         });
@@ -500,7 +494,6 @@ const useHomeLogic = () => {
         if (!selectedItem) return;
 
         await markItemAsBought({
-            userId,
             itemId: selectedItem.itemId,
             listId: selectedItem.listId,
             itemListId: selectedItem.itemListId,
@@ -548,7 +541,6 @@ const useHomeLogic = () => {
         setLastUsedMarketId(data.marketId);
 
         const payload = {
-            userId,
             itemId: selectedItem.itemId,
             listId: selectedItem.listId,
             itemListId: selectedItem.itemListId,

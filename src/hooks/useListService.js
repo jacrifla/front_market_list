@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import listService from "../services/ListService";
 
-const useListService = (userId) => {
+const useListService = () => {
     const [lists, setLists] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -98,8 +98,8 @@ const useListService = (userId) => {
     };
 
     useEffect(() => {
-        if (userId) fetchLists();
-    }, [userId, fetchLists]);
+        fetchLists();
+    }, [fetchLists]);
 
     return {
         lists,
