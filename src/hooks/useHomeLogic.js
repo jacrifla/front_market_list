@@ -9,46 +9,23 @@ import useUnitService from './useUnitService';
 import useMarketService from './useMarketService';
 
 const useHomeLogic = () => {
-    const [total, setTotal] = useState(0);
+    // ===== Estados agrupados por funcionalidade =====
+
+    // -- Estados relacionados a listas --
     const [selectedListId, setSelectedListId] = useState(null);
-    const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
-    const [unmarkedItemsForList, setUnmarkedItemsForList] = useState([]);
-
-    const [purchaseDateByListId, setPurchaseDateByListId] = useState({});
-    const [isPurchaseDateModalOpen, setIsPurchaseDateModalOpen] = useState(false);
-    const [pendingMarkAsBought, setPendingMarkAsBought] = useState(null);
-
-
-    const [selectedItem, setSelectedItem] = useState(null);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalMode, setModalMode] = useState('add');
-    const [modalInputValue, setModalInputValue] = useState('');
-
-    const [shareToken, setShareToken] = useState(null);
-    const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-
-    const [suggestions, setSuggestions] = useState([]);
-
-    const [isConfirmSaveModalOpen, setIsConfirmSaveModalOpen] = useState(false);
-    const [isSaveItemModalOpen, setIsSaveItemModalOpen] = useState(false);
-
-    const [showPurchaseDateModal, setShowPurchaseDateModal] = useState(false);
     const [pendingListIdToComplete, setPendingListIdToComplete] = useState(null);
     const [showCompleteListConfirmModal, setShowCompleteListConfirmModal] = useState(false);
+    const [unmarkedItemsForList, setUnmarkedItemsForList] = useState([]);
+    const [purchaseDateByListId, setPurchaseDateByListId] = useState({});
 
-    const [lastUsedMarketId, setLastUsedMarketId] = useState(null);
-
-    const [isItemModalOpen, setIsItemModalOpen] = useState(false);
-    const [itemModalMode, setItemModalMode] = useState('add');
+    // -- Estados relacionados a itens --
+    const [selectedItem, setSelectedItem] = useState(null);
     const [itemFormData, setItemFormData] = useState({
         itemName: '',
         quantity: 1,
         price: 0,
         itemType: 'common',
     });
-
     const [itemDetailFormData, setItemDetailFormData] = useState({
         categoryId: null,
         brandId: null,
@@ -57,8 +34,34 @@ const useHomeLogic = () => {
         barcode: '',
     });
 
-    const { generateShareToken } = useShareTokenService();
+    // -- Estados relacionados a modais --
+    const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
+    const [isConfirmSaveModalOpen, setIsConfirmSaveModalOpen] = useState(false);
+    const [isSaveItemModalOpen, setIsSaveItemModalOpen] = useState(false);
+    const [isItemModalOpen, setIsItemModalOpen] = useState(false);
+    const [isPurchaseDateModalOpen, setIsPurchaseDateModalOpen] = useState(false);
+    const [showPurchaseDateModal, setShowPurchaseDateModal] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalMode, setModalMode] = useState('add');
+    const [modalInputValue, setModalInputValue] = useState('');
+    const [itemModalMode, setItemModalMode] = useState('add');
 
+    // -- Estados relacionados a compartilhamento --
+    const [shareToken, setShareToken] = useState(null);
+    const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+    const [lastUsedMarketId, setLastUsedMarketId] = useState(null);
+
+    // -- Estados relacionados a sugestões/autocomplete --
+    const [suggestions, setSuggestions] = useState([]);
+
+    // -- Outros estados globais --
+    const [total, setTotal] = useState(0);
+    const [pendingMarkAsBought, setPendingMarkAsBought] = useState(null);
+
+    // ===== Serviços e hooks organizados =====
+
+    // Serviços de listas
     const {
         lists,
         createList,
@@ -70,14 +73,7 @@ const useHomeLogic = () => {
         loadingList,
     } = useListService();
 
-    const {
-        searchItemByBarcodeOrName,
-        items: itemSuggestions,
-        loadingItem,
-        errorItem,
-        successItem,
-    } = useItemService();
-
+    // Serviços de itens da lista
     const {
         listItems,
         loadingListItem,
@@ -90,6 +86,16 @@ const useHomeLogic = () => {
         deleteListItem,
     } = useListItemService();
 
+    // Serviços de sugestão de itens
+    const {
+        searchItemByBarcodeOrName,
+        items: itemSuggestions,
+        loadingItem,
+        errorItem,
+        successItem,
+    } = useItemService();
+
+    // Serviços de marcas
     const {
         brands,
         fetchBrands,
@@ -97,6 +103,7 @@ const useHomeLogic = () => {
         createBrand,
     } = useBrandService();
 
+    // Serviços de categorias
     const {
         categories,
         fetchCategorys,
@@ -104,6 +111,7 @@ const useHomeLogic = () => {
         createCategory,
     } = useCategoryService();
 
+    // Serviços de unidades
     const {
         units,
         fetchUnits,
@@ -111,6 +119,7 @@ const useHomeLogic = () => {
         createUnit,
     } = useUnitService();
 
+    // Serviços de mercados
     const {
         markets,
         fetchMarkets,
@@ -118,6 +127,10 @@ const useHomeLogic = () => {
         createMarket,
     } = useMarketService();
 
+    // Serviço de token de compartilhamento
+    const { generateShareToken } = useShareTokenService();
+
+    // ===== useEffect organizados =====
     useEffect(() => {
         fetchBrands();
         fetchCategorys();
@@ -134,6 +147,38 @@ const useHomeLogic = () => {
         setUnmarkedItemsForList(filtered);
     }, [listItems, pendingListIdToComplete]);
 
+    // Atualiza o total toda vez que listItems mudam
+    useEffect(() => {
+        const newTotal = listItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
+        setTotal(newTotal);
+    }, [listItems]);
+
+    // Carrega o último mercado usado do localStorage ao montar componente
+    useEffect(() => {
+        const savedMarketId = localStorage.getItem('lastUsedMarketId');
+        if (savedMarketId) setLastUsedMarketId(Number(savedMarketId));
+    }, []);
+
+    // Salva no localStorage o último mercado usado sempre que ele mudar
+    useEffect(() => {
+        if (lastUsedMarketId !== null) {
+            localStorage.setItem('lastUsedMarketId', lastUsedMarketId);
+        }
+    }, [lastUsedMarketId]);
+
+    // Carrega a última data de compra salva do localStorage (exemplo para uso futuro)
+    useEffect(() => {
+        const savedDate = localStorage.getItem('lastUsedPurchaseDate');
+        if (savedDate) {
+            // aplica para listas já carregadas (se quiser aplicar automaticamente)
+            setPurchaseDateByListId(prev => ({
+                ...prev,
+                default: savedDate
+            }));
+        }
+    }, []);
+
+    // ===== Funções para criação rápida (add) =====
     const handleAddBrand = async (name) => {
         await createBrand(name);
     };
@@ -150,35 +195,8 @@ const useHomeLogic = () => {
         await createMarket(name);
     };
 
+    // ===== Variáveis derivadas =====
     const selectedList = lists.find((list) => list.listId === selectedListId) || null;
-
-    useEffect(() => {
-        const newTotal = listItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
-        setTotal(newTotal);
-    }, [listItems]);
-
-    useEffect(() => {
-        const savedMarketId = localStorage.getItem('lastUsedMarketId');
-        if (savedMarketId) setLastUsedMarketId(Number(savedMarketId));
-    }, []);
-
-    useEffect(() => {
-        if (lastUsedMarketId !== null) {
-            localStorage.setItem('lastUsedMarketId', lastUsedMarketId);
-        }
-    }, [lastUsedMarketId]);
-
-    useEffect(() => {
-        const savedDate = localStorage.getItem('lastUsedPurchaseDate');
-        if (savedDate) {
-            // aplica para listas já carregadas (se quiser aplicar automaticamente)
-            setPurchaseDateByListId(prev => ({
-                ...prev,
-                default: savedDate
-            }));
-        }
-    }, []);
-
 
     // ========== LISTAS ==========
 
