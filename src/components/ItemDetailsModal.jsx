@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Modal, Button, Form, Spinner } from 'react-bootstrap';
-import QuickAddModal from './QuickAddModal'; // ajuste o caminho conforme necessário
+import QuickAddModal from './QuickAddModal';
 
 export default function ItemDetailsModal({
   show,
