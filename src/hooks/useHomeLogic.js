@@ -16,6 +16,7 @@ const useHomeLogic = () => {
     const [total, setTotal] = useState(0);
     const [selectedListId, setSelectedListId] = useState(null);
     const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
+    const [unmarkedItemsForList, setUnmarkedItemsForList] = useState([]);
 
     const [purchaseDateByListId, setPurchaseDateByListId] = useState({});
     const [isPurchaseDateModalOpen, setIsPurchaseDateModalOpen] = useState(false);
@@ -128,6 +129,15 @@ const useHomeLogic = () => {
         fetchMarkets();
     }, [fetchBrands, fetchCategorys, fetchUnits, fetchMarkets]);
 
+    useEffect(() => {
+        if (!pendingListIdToComplete) return;
+
+        const filtered = listItems.filter(
+            (item) => item.listId === pendingListIdToComplete && !item.purchasedAt
+        );
+        setUnmarkedItemsForList(filtered);
+    }, [listItems, pendingListIdToComplete]);
+
     const handleAddBrand = async (name) => {
         await createBrand(name);
     };
@@ -145,7 +155,6 @@ const useHomeLogic = () => {
     };
 
     const selectedList = lists.find((list) => list.listId === selectedListId) || null;
-    const unmarkedItems = listItems.filter(item => item.listId === pendingListIdToComplete && !item.purchasedAt);
 
     useEffect(() => {
         const newTotal = listItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
@@ -292,12 +301,10 @@ const useHomeLogic = () => {
         const listId = pendingListIdToComplete;
         const date = purchaseDateByListId[listId];
 
-        const unmarkedItems = listItems.filter(
-            (item) => item.listId === listId && !item.purchaseDate
-        );
+        const itemsToMark = unmarkedItemsForList.filter(item => item.listId === listId);
 
         await Promise.all(
-            unmarkedItems.map(item =>
+            itemsToMark.map(item =>
                 markItemAsBought({
                     userId,
                     itemId: item.itemId,
@@ -312,7 +319,6 @@ const useHomeLogic = () => {
                 })
             )
         );
-
 
         await handleCompleteList(listId);
         setShowCompleteListConfirmModal(false);
@@ -650,7 +656,7 @@ const useHomeLogic = () => {
         errorListItem,
         loadingItem,
         closeSelectedList,
-        unmarkedItems,
+        unmarkedItemsForList,
         handleAddBrand,
         handleAddCategory,
         handleAddUnit,

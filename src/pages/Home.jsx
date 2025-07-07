@@ -88,7 +88,7 @@ export default function Home() {
     handleConfirmWithItems,
     handleConfirmOnlyList,
     closeSelectedList,
-    unmarkedItems,
+    unmarkedItemsForList,
     handleAddBrand,
     handleAddCategory,
     handleAddUnit,
@@ -249,8 +249,8 @@ export default function Home() {
         cancelText="Cancelar"
         confirmText="Lista e Itens"
         onConfirm={handleConfirmWithItems}
-        confirmDisabled={unmarkedItems.length === 0}
-        showConfirmButton={unmarkedItems.length > 0}
+        confirmDisabled={unmarkedItemsForList.length === 0}
+        showConfirmButton={unmarkedItemsForList.length > 0}
         extraButton={{
           label: 'Somente a lista',
           variant: 'outline-primary',
