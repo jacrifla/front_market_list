@@ -198,6 +198,7 @@ const useHomeLogic = () => {
     // ===== Variáveis derivadas =====
     const selectedList = lists.find((list) => list.listId === selectedListId) || null;
 
+    // ===== Função para resetar seleção de lista =====
     function clearLastUsedData() {
         localStorage.removeItem('lastUsedMarketId');
         localStorage.removeItem('lastUsedPurchaseDate');
