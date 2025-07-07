@@ -198,6 +198,13 @@ const useHomeLogic = () => {
     // ===== Variáveis derivadas =====
     const selectedList = lists.find((list) => list.listId === selectedListId) || null;
 
+    function clearLastUsedData() {
+        localStorage.removeItem('lastUsedMarketId');
+        localStorage.removeItem('lastUsedPurchaseDate');
+        setLastUsedMarketId(null);
+        setPurchaseDateByListId({});
+    }
+
     // ========== LISTAS ==========
 
     // Seleciona uma lista no sidebar
@@ -244,6 +251,7 @@ const useHomeLogic = () => {
         setSelectedListId(null);
         setSelectedItem(null);
         setSuggestions([]);
+        clearLastUsedData();
     }
 
     // Deleta uma lista
