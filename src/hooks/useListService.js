@@ -82,12 +82,12 @@ const useListService = () => {
         }
     };
 
-    const markListCompleted = async ({ listId, totalAmount, purchaseDate }) => {        
+    const markListCompleted = async (data) => {        
         setLoading(true);
         clearMessages();
 
         try {
-            await listService.markListCompleted({ listId, totalAmount, purchaseDate });
+            await listService.markListCompleted(data);
             await fetchLists();
             setSuccess('Lista marcada com sucesso')
         } catch (error) {
