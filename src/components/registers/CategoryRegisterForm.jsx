@@ -64,7 +64,7 @@ export default function CategoryRegisterForm() {
     }
 
     const categoryData = {
-      categoryName: categoryName.trim(),
+      name: categoryName.trim(),
       description: description.trim(),
     };
 
