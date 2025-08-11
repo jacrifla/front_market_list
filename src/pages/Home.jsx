@@ -226,6 +226,7 @@ export default function Home() {
         onAddMarket={handleAddMarket}
       />
 
+      {/* Marcar o item  */}
       <PurchaseDateModal
         show={isPurchaseDateModalOpen}
         onClose={() => {
@@ -235,6 +236,7 @@ export default function Home() {
         onConfirm={handlePurchaseDateSelected}
       />
 
+      {/* Marcar a Lista  */}
       <PurchaseDateModal
         show={showPurchaseDateModal}
         onClose={() => setShowPurchaseDateModal(false)}
