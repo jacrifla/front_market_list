@@ -93,6 +93,9 @@ export default function Home() {
     handleAddCategory,
     handleAddUnit,
     handleAddMarket,
+    purchaseDateByListId,
+    chaveAcessoByListId,
+    pendingListIdToComplete
   } = useHomeLogic();
 
   useToastMessage(null, errorList);
@@ -234,6 +237,7 @@ export default function Home() {
           setPendingMarkAsBought(null);
         }}
         onConfirm={handlePurchaseDateSelected}
+        showChaveAcessoInput={false}
       />
 
       {/* Marcar a Lista  */}
@@ -241,6 +245,9 @@ export default function Home() {
         show={showPurchaseDateModal}
         onClose={() => setShowPurchaseDateModal(false)}
         onConfirm={handleConfirmPurchaseDate}
+        initialDate={purchaseDateByListId[pendingListIdToComplete] || ''}
+        initialChaveAcesso={chaveAcessoByListId[pendingListIdToComplete] || ''}
+        showChaveAcessoInput={true}
       />
 
       <ConfirmModal
