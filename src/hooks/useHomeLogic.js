@@ -17,6 +17,7 @@ const useHomeLogic = () => {
     const [showCompleteListConfirmModal, setShowCompleteListConfirmModal] = useState(false);
     const [unmarkedItemsForList, setUnmarkedItemsForList] = useState([]);
     const [purchaseDateByListId, setPurchaseDateByListId] = useState({});
+    const [chaveAcessoByListId, setChaveAcessoByListId] = useState({});
 
     // -- Estados relacionados a itens --
     const [selectedItem, setSelectedItem] = useState(null);
@@ -200,8 +201,8 @@ const useHomeLogic = () => {
 
     // ===== Função para resetar seleção de lista =====
     function clearLastUsedData() {
-        localStorage.removeItem('lastUsedMarketId');
         localStorage.removeItem('lastUsedPurchaseDate');
+        localStorage.removeItem('lastUsedChaveAcesso');
         setLastUsedMarketId(null);
         setPurchaseDateByListId({});
     }
@@ -284,27 +285,40 @@ const useHomeLogic = () => {
     // Inicia processo de concluir a lista com data
     const handleStartCompleteList = (listId) => {
         const existingDate = purchaseDateByListId[listId] || localStorage.getItem('lastUsedPurchaseDate');
+        const existingChave = chaveAcessoByListId[listId] || localStorage.getItem('lastUsedChaveAcesso');
 
         setPendingListIdToComplete(listId);
 
-        if (existingDate) {
+        // Só pula modal se tiver data e chave
+        if (existingDate && existingChave) {
             setPurchaseDateByListId(prev => ({
                 ...prev,
                 [listId]: existingDate
             }));
+            setChaveAcessoByListId(prev => ({
+                ...prev,
+                [listId]: existingChave
+            }));
             setShowCompleteListConfirmModal(true);
         } else {
+            // Se faltar data ou chave → abre modal
             setShowPurchaseDateModal(true);
         }
     };
 
     // Confirma a data de compra e abre confirmação final
-    const handleConfirmPurchaseDate = (date) => {
-        setPurchaseDateByListId((prev) => ({
+    const handleConfirmPurchaseDate = ({ purchaseDate, chaveAcesso }) => {
+        setPurchaseDateByListId(prev => ({
             ...prev,
-            [pendingListIdToComplete]: date,
+            [pendingListIdToComplete]: purchaseDate,
         }));
-        localStorage.setItem('lastUsedPurchaseDate', date);
+        setChaveAcessoByListId(prev => ({
+            ...prev,
+            [pendingListIdToComplete]: chaveAcesso,
+        }));
+
+        localStorage.setItem('lastUsedPurchaseDate', purchaseDate);
+        localStorage.setItem('lastUsedChaveAcesso', chaveAcesso);
 
         setShowPurchaseDateModal(false);
         setShowCompleteListConfirmModal(true);
@@ -315,6 +329,11 @@ const useHomeLogic = () => {
         if (!pendingListIdToComplete) return;
 
         await handleCompleteList(pendingListIdToComplete);
+
+        // Remove chave do localStorage após concluir
+        localStorage.removeItem('lastUsedChaveAcesso');
+        localStorage.removeItem('lastUsedPurchaseDate');
+
         setShowCompleteListConfirmModal(false);
         setPendingListIdToComplete(null);
     };
@@ -335,7 +354,7 @@ const useHomeLogic = () => {
                     categoryId: null,
                     brandId: null,
                     unitId: null,
-                    marketId: null,
+                    marketId: lastUsedMarketId,
                     barcode: null,
                     purchaseDate: date,
                 })
@@ -343,6 +362,11 @@ const useHomeLogic = () => {
         );
 
         await handleCompleteList(listId);
+
+        // Remove chave do localStorage após concluir
+        localStorage.removeItem('lastUsedChaveAcesso');
+        localStorage.removeItem('lastUsedPurchaseDate');
+
         setShowCompleteListConfirmModal(false);
         setPendingListIdToComplete(null);
     };
@@ -358,8 +382,10 @@ const useHomeLogic = () => {
         }
         await markListCompleted({
             listId,
-            totalAmount: total,
-            purchaseDate: purchaseDateByListId[listId] || null
+            totalAmount: totalForList,
+            purchaseDate: purchaseDateByListId[listId] || null,
+            marketId: lastUsedMarketId,
+            chaveAcesso: chaveAcessoByListId[listId] || null,
         });
         setSelectedListId(listId);
         setIsConfirmDeleteModalOpen(true);
@@ -543,7 +569,7 @@ const useHomeLogic = () => {
                 categoryId: selectedItem.categoryId || null,
                 brandId: selectedItem.brandId || null,
                 unitId: selectedItem.unitId || null,
-                marketId: selectedItem.marketId || null,
+                marketId: selectedItem.marketId || lastUsedMarketId || null,
                 barcode: selectedItem.barcode || '',
             });
         }
@@ -559,7 +585,6 @@ const useHomeLogic = () => {
         const lastUsedDate = localStorage.getItem('lastUsedPurchaseDate');
         return lastUsedDate || null;
     };
-
 
     // Salva os dados extras do item comprado
     const handleSubmitItemInfo = async (data) => {
@@ -680,6 +705,11 @@ const useHomeLogic = () => {
         handleAddCategory,
         handleAddUnit,
         handleAddMarket,
+        getPurchaseDateForList,
+        purchaseDateByListId,
+        chaveAcessoByListId,
+        pendingMarkAsBought,
+        pendingListIdToComplete
     };
 };
 
