@@ -7,6 +7,7 @@ const PurchaseDateModal = ({
   onConfirm,
   initialDate = '',
   initialChaveAcesso = '',
+  showChaveAcessoInput = false,
 }) => {
   const [selectedDate, setSelectedDate] = useState('');
   const [chaveAcesso, setChaveAcesso] = useState('');
@@ -39,15 +40,17 @@ const PurchaseDateModal = ({
           />
         </Form.Group>
 
-        <Form.Group controlId="chaveAcesso" className="mt-3">
-          <Form.Label>Chave de Acesso (opcional)</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Digite a chave de acesso"
-            value={chaveAcesso}
-            onChange={(e) => setChaveAcesso(e.target.value)}
-          />
-        </Form.Group>
+        {showChaveAcessoInput && (
+          <Form.Group controlId="chaveAcesso" className="mt-3">
+            <Form.Label>Chave de Acesso (opcional)</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Digite a chave de acesso"
+              value={chaveAcesso}
+              onChange={(e) => setChaveAcesso(e.target.value)}
+            />
+          </Form.Group>
+        )}
       </Modal.Body>
       <Modal.Footer className="border-0">
         <Button variant="secondary" onClick={onClose}>
