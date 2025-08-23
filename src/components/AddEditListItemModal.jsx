@@ -79,8 +79,10 @@ export default function AddEditListItemModal({
                     onMouseOver={() => setHighlightedIndex(idx)}
                     onMouseOut={() => setHighlightedIndex(-1)}
                   >
-                    {sug.itemName}
-                    {sug.barcode && ` (${sug.barcode})`}
+                    <span className="item-name">{sug.itemName}</span>
+                    {sug.barcode && (
+                      <span className="barcode"> ({sug.barcode})</span>
+                    )}
                   </div>
                 ))}
               </div>
