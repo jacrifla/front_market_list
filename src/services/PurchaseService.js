@@ -11,8 +11,8 @@ const purchaseService = {
   getTotalSpentByPeriod: async (startDate, endDate) =>
     fetchWrapper(withQuery('total-spent', { startDate, endDate })),
 
-  getMostPurchasedItems: async (startDate, endDate, limit) =>
-    fetchWrapper(withQuery('most-purchased', { startDate, endDate, limit: limit || 5 })),
+  getMostPurchasedItems: async (startDate, endDate, page = 1, limit = 5) =>
+    fetchWrapper(withQuery('most-purchased', { startDate, endDate, page, limit })),
 
   getItemsPurchasedByPeriod: async (startDate, endDate) =>
     fetchWrapper(withQuery('items-purchased', { startDate, endDate })),

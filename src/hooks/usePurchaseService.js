@@ -23,7 +23,13 @@ export default function usePurchaseService() {
     );
 
     const getMostPurchasedItems = useCallback(
-        (startDate, endDate, limit = 5) => purchaseService.getMostPurchasedItems(startDate, endDate, limit),
+        async (startDate, endDate, page = 1, limit = 5) => {
+            const response = await purchaseService.getMostPurchasedItems(startDate, endDate, page, limit);
+            return {
+                items: response?.items || [],
+                ...response?.meta
+            };
+        },
         []
     );
 

@@ -24,11 +24,11 @@ export default function Metrics() {
 
   const [startDate, setStartDate] = useState(defaultStart);
   const [endDate, setEndDate] = useState(defaultEnd);
-
-  const handleFetchMetrics = async () => {
+  
+  const handleFetchMetrics = async (page = 1) => {
     setLoading(true);
     try {
-      const data = await fetchMetricsData(startDate, endDate);
+      const data = await fetchMetricsData(startDate, endDate, page, 5);
       setMetrics(data);
     } catch (err) {
       showToast('Erro ao buscar métricas.', 'error');
@@ -37,7 +37,7 @@ export default function Metrics() {
       setLoading(false);
     }
   };
-
+  
   return (
     <div className="container my-4">
       <h3 className="mb-3">Métricas de Compras</h3>
@@ -54,8 +54,15 @@ export default function Metrics() {
       {metrics && (
         <div className="mt-4">
           <MetricsSummary {...metrics} />
-          <MetricsMostPurchased items={metrics.mostPurchasedItems} />
+
+          <MetricsMostPurchased
+            items={metrics.mostPurchasedItems}
+            meta={metrics.mostPurchasedMeta}
+            onPageChange={(page) => handleFetchMetrics(page)}
+          />
+
           <MetricsCategoryPurchases categories={metrics.categoryPurchases} />
+          
           <MetricsTopItems items={metrics.topItemsByValue} />
 
           <MetricsComparisonSpent

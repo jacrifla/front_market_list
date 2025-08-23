@@ -12,7 +12,7 @@ export default function useMetricsService() {
     getTopItemsByValue,
   } = usePurchaseService();
 
-  const fetchMetricsData = useCallback(async (start, end) => {
+  const fetchMetricsData = useCallback(async (start, end, page = 1, limit = 50) => {
     const [
       { totalSpent },
       { avgSpendPerPurchase },
@@ -26,7 +26,7 @@ export default function useMetricsService() {
       getAvgSpendPerPurchase(start, end),
       getLargestPurchase(start, end),
       getAvgDailySpend(start, end),
-      getMostPurchasedItems(start, end, 50),
+      getMostPurchasedItems(start, end, page, limit),
       getCategoryPurchases(start, end),
       getTopItemsByValue(start, end),
     ]);
@@ -36,7 +36,13 @@ export default function useMetricsService() {
       avgSpend: Number(avgSpendPerPurchase) || 0,
       largestPurchase: Number(largestPurchase) || 0,
       avgDailySpend: Number(avgDailySpend) || 0,
-      mostPurchasedItems: mostPurchasedItems || [],
+      mostPurchasedItems: mostPurchasedItems.items || [],
+      mostPurchasedMeta: {
+        totalItems: mostPurchasedItems.totalItems,
+        totalPages: mostPurchasedItems.totalPages,
+        page: mostPurchasedItems.page,
+        limit: mostPurchasedItems.limit,
+      },
       categoryPurchases: categoryPurchases || [],
       topItemsByValue: topItemsByValue || [],
     };
