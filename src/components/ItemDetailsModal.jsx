@@ -237,6 +237,7 @@ export default function ItemDetailsModal({
         show={showAddCategory}
         onHide={() => setShowAddCategory(false)}
         onSave={onAddCategory}
+        extraFields={[{ name: 'description', label: 'Descrição' }]}
         label="categoria"
       />
 
