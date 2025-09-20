@@ -1,11 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 
-export default function QuickAddModal({  show, onHide, onSave, label, extraFields = []}) {
+export default function QuickAddModal({
+  show,
+  onHide,
+  onSave,
+  label,
+  extraFields = [],
+}) {
   const [formData, setFormData] = useState({
     name: '',
     ...extraFields.reduce((acc, f) => ({ ...acc, [f.name]: '' }), {}),
   });
+
+  // Reset form quando o modal abre/fecha
+ useEffect(() => {
+  if (!show) {
+    setFormData({
+      name: '',
+      ...extraFields.reduce((acc, f) => ({ ...acc, [f.name]: '' }), {}),
+    });
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [show]);
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -13,7 +31,19 @@ export default function QuickAddModal({  show, onHide, onSave, label, extraField
 
   const handleSubmit = () => {
     if (!formData.name.trim()) return;
-    onSave(formData);
+
+    // Se não houver extraFields, envia só a string name
+    if (extraFields.length === 0) {
+      onSave(formData.name.trim());
+    } else {
+      // Caso contrário, envia o objeto completo
+      onSave({
+        ...formData,
+        name: formData.name.trim(),
+      });
+    }
+
+    // Reset form e fecha modal
     setFormData({
       name: '',
       ...extraFields.reduce((acc, f) => ({ ...acc, [f.name]: '' }), {}),
